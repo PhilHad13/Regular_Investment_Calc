@@ -8,16 +8,21 @@
     :root {
       --ink: #2f3338;
       --muted: #6f747b;
-      --line: #e1e3e6;
-      --paper: #f7f7f8;
+      --line: #dfe3e7;
+      --paper: #f4f6f8;
       --panel: #ffffff;
-      --tam-red: #ed1b2f;
-      --tam-red-dark: #c91427;
-      --low: #7a8088;
-      --medium: #4b535d;
-      --high: var(--tam-red);
-      --focus: var(--tam-red);
-      --shadow: 0 14px 34px rgba(24, 28, 34, 0.1);
+      --tam-blue: #005cab;
+      --tam-blue-dark: #004a89;
+      --tam-blue-90: #2d68b2;
+      --tam-blue-80: #4771b8;
+      --tam-grey-75: #636466;
+      --tam-grey-50: #949699;
+      --tam-grey-25: #c7c9cb;
+      --low: var(--tam-grey-50);
+      --medium: var(--tam-grey-75);
+      --high: var(--tam-blue);
+      --focus: var(--tam-blue);
+      --shadow: 0 14px 34px rgba(0, 92, 171, 0.09);
     }
 
     * {
@@ -62,7 +67,7 @@
       height: 5px;
       margin-top: 14px;
       border-radius: 999px;
-      background: var(--tam-red);
+      background: var(--tam-blue);
     }
 
     .intro {
@@ -136,7 +141,7 @@
     input:focus,
     select:focus {
       border-color: var(--focus);
-      box-shadow: 0 0 0 3px rgba(237, 27, 47, 0.14);
+      box-shadow: 0 0 0 3px rgba(0, 92, 171, 0.14);
     }
 
     input[readonly] {
@@ -173,7 +178,7 @@
       border: 3px solid white;
       border-radius: 50%;
       background: var(--focus);
-      box-shadow: 0 3px 10px rgba(237, 27, 47, 0.26);
+      box-shadow: 0 3px 10px rgba(0, 92, 171, 0.26);
       appearance: none;
     }
 
@@ -189,7 +194,7 @@
       border: 3px solid white;
       border-radius: 50%;
       background: var(--focus);
-      box-shadow: 0 3px 10px rgba(237, 27, 47, 0.26);
+      box-shadow: 0 3px 10px rgba(0, 92, 171, 0.26);
     }
 
     .amount-value {
@@ -212,7 +217,7 @@
       transform: translateX(-50%);
       min-width: 64px;
       border-radius: 999px;
-      background: var(--tam-red);
+      background: var(--tam-blue);
       color: white;
       font-size: 0.78rem;
       font-weight: 800;
@@ -220,7 +225,7 @@
       padding: 7px 9px;
       text-align: center;
       white-space: nowrap;
-      box-shadow: 0 6px 14px rgba(237, 27, 47, 0.18);
+      box-shadow: 0 6px 14px rgba(0, 92, 171, 0.18);
       pointer-events: none;
     }
 
@@ -234,7 +239,7 @@
       height: 0;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
-      border-top: 6px solid var(--tam-red);
+      border-top: 6px solid var(--tam-blue);
     }
 
     .range-limits {
@@ -296,7 +301,7 @@
     .timeframe-options input:checked + label {
       border-color: var(--focus);
       background: #fff0f2;
-      color: var(--tam-red-dark);
+      color: var(--tam-blue-dark);
       box-shadow: inset 0 0 0 1px var(--focus);
     }
 
@@ -359,7 +364,7 @@
       margin-top: 12px;
       border: 0;
       background: transparent;
-      color: var(--tam-red-dark);
+      color: var(--tam-blue-dark);
       font: inherit;
       font-size: 0.78rem;
       font-weight: 750;
@@ -370,8 +375,44 @@
     }
 
     .rate-edit-toggle:focus {
-      outline: 3px solid rgba(237, 27, 47, 0.18);
+      outline: 3px solid rgba(0, 92, 171, 0.18);
       outline-offset: 3px;
+    }
+
+    .style-selected {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #f8fafc;
+      padding: 12px;
+    }
+
+    .style-selected::before {
+      content: "";
+      display: block;
+      width: 16px;
+      height: 42px;
+      border-radius: 3px;
+      background: linear-gradient(180deg, var(--tam-blue) 0%, var(--tam-blue-90) 58%, var(--tam-grey-50) 58%, var(--tam-grey-50) 100%);
+    }
+
+    .style-selected span {
+      display: block;
+      color: var(--tam-blue);
+      font-size: 0.76rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .style-selected strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink);
+      font-size: 1rem;
     }
 
     .rate-field {
@@ -431,24 +472,24 @@
     }
 
     .download-button {
-      border: 1px solid var(--tam-red);
+      border: 1px solid var(--tam-blue);
       border-radius: 6px;
-      background: var(--tam-red);
+      background: var(--tam-blue);
       color: white;
       font: inherit;
       font-weight: 800;
       padding: 11px 16px;
       cursor: pointer;
-      box-shadow: 0 10px 20px rgba(237, 27, 47, 0.16);
+      box-shadow: 0 10px 20px rgba(0, 92, 171, 0.16);
     }
 
     .download-button:hover {
-      background: var(--tam-red-dark);
-      border-color: var(--tam-red-dark);
+      background: var(--tam-blue-dark);
+      border-color: var(--tam-blue-dark);
     }
 
     .download-button:focus {
-      outline: 3px solid rgba(237, 27, 47, 0.18);
+      outline: 3px solid rgba(0, 92, 171, 0.18);
       outline-offset: 3px;
     }
 
@@ -642,6 +683,16 @@
           <div class="field">
             <label for="prepared-date">Date</label>
             <input id="prepared-date" name="prepared-date" type="text" readonly>
+          </div>
+        </div>
+
+        <div class="panel control-box">
+          <div class="label">Style</div>
+          <div class="style-selected" aria-label="Selected calculator style">
+            <div>
+              <span>TAM Brand</span>
+              <strong>Corporate blue and grey</strong>
+            </div>
           </div>
         </div>
 
@@ -1094,7 +1145,7 @@
       elements.table.innerHTML = rows.join("");
     }
 
-    function downloadPdfReport() {
+    async function downloadPdfReport() {
       const settings = readSettings();
       const results = {
         low: project(settings, settings.rates.low),
@@ -1102,7 +1153,8 @@
         high: project(settings, settings.rates.high)
       };
       const totalInvested = investedByYear(settings, settings.years);
-      const pdfBytes = buildPdfReport(settings, results, totalInvested);
+      const logo = await loadPdfLogo();
+      const pdfBytes = buildPdfReport(settings, results, totalInvested, logo);
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -1114,20 +1166,51 @@
       setTimeout(() => URL.revokeObjectURL(url), 0);
     }
 
-    function buildPdfReport(settings, results, totalInvested) {
+    async function loadPdfLogo() {
+      try {
+        const image = await loadImage("tam-logo-int.png");
+        const canvas = document.createElement("canvas");
+        const width = 640;
+        const height = Math.round(image.naturalHeight * width / image.naturalWidth);
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(image, 0, 0, width, height);
+        return {
+          data: canvas.toDataURL("image/jpeg", 0.86).split(",")[1],
+          width,
+          height
+        };
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = src;
+      });
+    }
+
+    function buildPdfReport(settings, results, totalInvested, logo) {
       const pdf = createPdf();
       const scenarios = [
-        { key: "low", label: "Low Growth", rate: settings.rates.low, color: [0.48, 0.5, 0.53] },
-        { key: "medium", label: "Medium Growth", rate: settings.rates.medium, color: [0.29, 0.33, 0.36] },
-        { key: "high", label: "High Growth", rate: settings.rates.high, color: [0.93, 0.11, 0.18] }
+        { key: "low", label: "Low Growth", rate: settings.rates.low, color: [0.58, 0.59, 0.6] },
+        { key: "medium", label: "Medium Growth", rate: settings.rates.medium, color: [0.39, 0.39, 0.4] },
+        { key: "high", label: "High Growth", rate: settings.rates.high, color: [0, 0.36, 0.67] }
       ];
 
-      pdf.rect(0, 0, 595.28, 12, [0.93, 0.11, 0.18]);
+      pdf.rect(0, 0, 595.28, 12, [0, 0.36, 0.67]);
       pdf.text("Regular Investment Illustration", 42, 54, 22, "F2", [0.18, 0.2, 0.22]);
-      pdf.text(`Date: ${settings.preparedDate}`, 438, 54, 10, "F1", [0.44, 0.45, 0.48]);
-      pdf.text(`Client: ${settings.clientName || "Not specified"}`, 42, 78, 9, "F1", [0.44, 0.45, 0.48]);
-      pdf.text(`Prepared by: ${settings.preparedBy || "Not specified"}`, 330, 78, 9, "F1", [0.44, 0.45, 0.48]);
-      pdf.line(42, 94, 553, 94, [0.88, 0.89, 0.9], 1);
+      drawTamLogo(pdf, logo, 405, 38);
+      drawPdfInfoBox(pdf, "Client name", settings.clientName || "Not specified", 42, 76, 240);
+      drawPdfInfoBox(pdf, "Prepared by", settings.preparedBy || "Not specified", 300, 76, 240);
+      pdf.line(42, 114, 553, 114, [0.88, 0.89, 0.9], 1);
 
       const inputRows = [
         ["Initial investment", formatPdfMoney(settings.initial, settings.currency)],
@@ -1145,12 +1228,12 @@
         ["Annual management charge", `${formatRate(settings.charges.management)} pa`]
       ];
 
-      pdf.text("Investment profile", 42, 116, 12, "F2", [0.18, 0.2, 0.22]);
-      drawBoxedKeyValueGrid(pdf, inputRows, 42, 132, 500, 4);
-      pdf.text("Growth rates", 42, 190, 12, "F2", [0.18, 0.2, 0.22]);
-      drawBoxedKeyValueGrid(pdf, growthRows, 42, 206, 300, 3);
-      pdf.text("Charges", 370, 190, 12, "F2", [0.18, 0.2, 0.22]);
-      drawBoxedKeyValueGrid(pdf, chargeRows, 370, 206, 172, 2);
+      pdf.text("Investment profile", 42, 132, 12, "F2", [0.18, 0.2, 0.22]);
+      drawBoxedKeyValueGrid(pdf, inputRows, 42, 148, 500, 4);
+      pdf.text("Growth rates", 42, 206, 12, "F2", [0.18, 0.2, 0.22]);
+      drawBoxedKeyValueGrid(pdf, growthRows, 42, 222, 300, 3);
+      pdf.text("Charges", 370, 206, 12, "F2", [0.18, 0.2, 0.22]);
+      drawBoxedKeyValueGrid(pdf, chargeRows, 370, 222, 172, 2);
 
       pdf.text(`${settings.years}-year outcomes`, 42, 276, 12, "F2", [0.18, 0.2, 0.22]);
       scenarios.forEach((scenario, index) => {
@@ -1172,6 +1255,25 @@
       drawPdfImportantInformation(pdf, 12, 730, 571);
 
       return pdf.output();
+    }
+
+    function drawTamLogo(pdf, logo, x, y) {
+      if (logo) {
+        pdf.image(logo, x, y, 148, 23);
+        return;
+      }
+
+      pdf.text("TAM", x, y + 16, 25, "F2", [0, 0.36, 0.67]);
+      pdf.line(x + 66, y - 1, x + 66, y + 23, [0.78, 0.79, 0.8], 1);
+      pdf.text("asset management", x + 76, y + 8, 6.8, "F1", [0.39, 0.39, 0.4]);
+      pdf.text("international", x + 76, y + 18, 6.8, "F1", [0.39, 0.39, 0.4]);
+    }
+
+    function drawPdfInfoBox(pdf, label, value, x, y, width) {
+      pdf.rect(x, y, width, 30, [0.98, 0.98, 0.98]);
+      pdf.rect(x, y, 4, 30, [0, 0.36, 0.67]);
+      pdf.text(label, x + 14, y + 11, 6.8, "F1", [0.44, 0.45, 0.48]);
+      pdf.text(value, x + 14, y + 24, 9, "F2", [0.18, 0.2, 0.22]);
     }
 
     function drawBoxedKeyValueGrid(pdf, rows, x, y, width, columns) {
@@ -1298,7 +1400,7 @@
           x: chartX + chartWidth * (point.year / settings.years),
           y: chartY + chartHeight - chartHeight * (point.value / maxValue)
         })),
-        [1, 0.93, 0.94]
+        [0.92, 0.96, 1]
       );
 
       scenarios.forEach((scenario) => {
@@ -1317,6 +1419,7 @@
       const width = 595.28;
       const height = 841.89;
       const content = [];
+      const images = [];
       const yPos = (y) => height - y;
       const color = (values, operator) => `${values.map((value) => value.toFixed(3)).join(" ")} ${operator}`;
 
@@ -1348,19 +1451,33 @@
           content.push(color(fill, "rg"));
           content.push(`${x.toFixed(2)} ${yPos(y + rectHeight).toFixed(2)} ${rectWidth.toFixed(2)} ${rectHeight.toFixed(2)} re f`);
         },
+        image(image, x, y, imageWidth, imageHeight) {
+          const imageName = `Im${images.length + 1}`;
+          images.push({ ...image, name: imageName });
+          content.push(`q ${imageWidth.toFixed(2)} 0 0 ${imageHeight.toFixed(2)} ${x.toFixed(2)} ${yPos(y + imageHeight).toFixed(2)} cm /${imageName} Do Q`);
+        },
         output() {
-          return writePdf(content.join("\n"), width, height);
+          return writePdf(content.join("\n"), width, height, images);
         }
       };
     }
 
-    function writePdf(pageContent, width, height) {
+    function writePdf(pageContent, width, height, images = []) {
+      const imageResource = images.length
+        ? `/XObject << ${images.map((image, index) => `/${image.name} ${index + 6} 0 R`).join(" ")} >>`
+        : "";
+      const contentObjectNumber = 6 + images.length;
+      const imageObjects = images.map((image) => {
+        const hexData = base64ToHex(image.data);
+        return `<< /Type /XObject /Subtype /Image /Width ${image.width} /Height ${image.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter [/ASCIIHexDecode /DCTDecode] /Length ${hexData.length + 1} >>\nstream\n${hexData}>\nendstream`;
+      });
       const objects = [
         "<< /Type /Catalog /Pages 2 0 R >>",
         "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-        `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>`,
+        `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> ${imageResource} >> /Contents ${contentObjectNumber} 0 R >>`,
         "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
         "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+        ...imageObjects,
         `<< /Length ${pageContent.length} >>\nstream\n${pageContent}\nendstream`
       ];
       let pdf = "%PDF-1.4\n";
@@ -1378,6 +1495,15 @@
       });
       pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
       return pdf;
+    }
+
+    function base64ToHex(base64) {
+      const binary = atob(base64);
+      let hex = "";
+      for (let index = 0; index < binary.length; index += 1) {
+        hex += binary.charCodeAt(index).toString(16).padStart(2, "0");
+      }
+      return hex;
     }
 
     function drawChart(results, settings) {
@@ -1451,7 +1577,7 @@
 
     function drawRangeBand(ctx, lowPoints, highPoints, padding, chartWidth, chartHeight, maxValue, periodYears) {
       ctx.save();
-      ctx.fillStyle = "rgba(237, 27, 47, 0.055)";
+      ctx.fillStyle = "rgba(0, 92, 171, 0.055)";
       ctx.beginPath();
       highPoints.forEach((point, index) => {
         const x = padding.left + chartWidth * (point.year / periodYears);
