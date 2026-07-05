@@ -1,0 +1,1649 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regular Investment Calculator</title>
+  <style>
+    :root {
+      --ink: #2f3338;
+      --muted: #6f747b;
+      --line: #e1e3e6;
+      --paper: #f7f7f8;
+      --panel: #ffffff;
+      --tam-red: #ed1b2f;
+      --tam-red-dark: #c91427;
+      --low: #7a8088;
+      --medium: #4b535d;
+      --high: var(--tam-red);
+      --focus: var(--tam-red);
+      --shadow: 0 14px 34px rgba(24, 28, 34, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0%, var(--paper) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 48px;
+    }
+
+    .topbar {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(2rem, 5vw, 4.25rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+
+    h1::after {
+      content: "";
+      display: block;
+      width: 74px;
+      height: 5px;
+      margin-top: 14px;
+      border-radius: 999px;
+      background: var(--tam-red);
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      max-width: 680px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .control-box {
+      padding: 18px;
+    }
+
+    .control-box .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label,
+    .label,
+    .section-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: white;
+      font: inherit;
+      font-weight: 650;
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(237, 27, 47, 0.14);
+    }
+
+    input[readonly] {
+      background: #f7f7f8;
+      color: var(--muted);
+      cursor: default;
+    }
+
+    input[type="range"] {
+      appearance: none;
+      -webkit-appearance: none;
+      min-height: 34px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      accent-color: var(--focus);
+      cursor: pointer;
+    }
+
+    input[type="range"]:focus {
+      box-shadow: none;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #e8eaed;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 22px;
+      height: 22px;
+      margin-top: -7px;
+      border: 3px solid white;
+      border-radius: 50%;
+      background: var(--focus);
+      box-shadow: 0 3px 10px rgba(237, 27, 47, 0.26);
+      appearance: none;
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #e8eaed;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border: 3px solid white;
+      border-radius: 50%;
+      background: var(--focus);
+      box-shadow: 0 3px 10px rgba(237, 27, 47, 0.26);
+    }
+
+    .amount-value {
+      color: var(--ink);
+      font-size: 0.95rem;
+      letter-spacing: 0;
+      text-transform: none;
+      white-space: nowrap;
+    }
+
+    .slider-wrap {
+      position: relative;
+      padding-top: 30px;
+    }
+
+    .slider-value {
+      position: absolute;
+      top: 0;
+      left: var(--slider-position, 0%);
+      transform: translateX(-50%);
+      min-width: 64px;
+      border-radius: 999px;
+      background: var(--tam-red);
+      color: white;
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1;
+      padding: 7px 9px;
+      text-align: center;
+      white-space: nowrap;
+      box-shadow: 0 6px 14px rgba(237, 27, 47, 0.18);
+      pointer-events: none;
+    }
+
+    .slider-value::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -5px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--tam-red);
+    }
+
+    .range-limits {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .currency-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .timeframe-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .segmented input,
+    .currency-options input,
+    .timeframe-options input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segmented label,
+    .currency-options label,
+    .timeframe-options label {
+      display: grid;
+      place-items: center;
+      justify-content: center;
+      min-height: 42px;
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-align: center;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .segmented input:checked + label,
+    .currency-options input:checked + label,
+    .timeframe-options input:checked + label {
+      border-color: var(--focus);
+      background: #fff0f2;
+      color: var(--tam-red-dark);
+      box-shadow: inset 0 0 0 1px var(--focus);
+    }
+
+    .rates {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .charges,
+    .charge-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .charges {
+      margin-top: 14px;
+    }
+
+    .charges .rate-field {
+      position: relative;
+      display: block;
+      margin: 0;
+    }
+
+    .rate-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .rate-summary-item {
+      display: grid;
+      gap: 3px;
+      min-height: 58px;
+      align-content: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fafafa;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .rate-summary-item span {
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .rate-summary-item strong {
+      font-size: 1.05rem;
+      line-height: 1;
+    }
+
+    .rate-edit-toggle {
+      display: inline-flex;
+      margin-top: 12px;
+      border: 0;
+      background: transparent;
+      color: var(--tam-red-dark);
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 750;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .rate-edit-toggle:focus {
+      outline: 3px solid rgba(237, 27, 47, 0.18);
+      outline-offset: 3px;
+    }
+
+    .rate-field {
+      position: relative;
+    }
+
+    .rate-field input {
+      padding-right: 28px;
+    }
+
+    .rate-field span {
+      position: absolute;
+      right: 10px;
+      bottom: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .results {
+      display: grid;
+      gap: 18px;
+    }
+
+    .chart-panel {
+      padding: 18px;
+    }
+
+    .chart-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 0.86rem;
+      letter-spacing: 0;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 430px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 430px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .download-button {
+      border: 1px solid var(--tam-red);
+      border-radius: 6px;
+      background: var(--tam-red);
+      color: white;
+      font: inherit;
+      font-weight: 800;
+      padding: 11px 16px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(237, 27, 47, 0.16);
+    }
+
+    .download-button:hover {
+      background: var(--tam-red-dark);
+      border-color: var(--tam-red-dark);
+    }
+
+    .download-button:focus {
+      outline: 3px solid rgba(237, 27, 47, 0.18);
+      outline-offset: 3px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .results > .section-label {
+      margin: 0;
+    }
+
+    .metric {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      padding: 16px 16px 16px 20px;
+      border-left: 5px solid;
+      background: #fbfbfc;
+    }
+
+    .metric > span,
+    .metric-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .metric-row {
+      display: grid;
+      gap: 3px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+      line-height: 1.05;
+    }
+
+    .metric small {
+      display: block;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .table-panel {
+      overflow: hidden;
+    }
+
+    .table-title {
+      padding: 18px 18px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th,
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      background: #f2f3f5;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+      font-weight: 800;
+    }
+
+    .note {
+      margin: 12px 2px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .important-info {
+      margin-top: 28px;
+      padding: 24px;
+    }
+
+    .important-info h2 {
+      margin-bottom: 14px;
+    }
+
+    .important-info p {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.5;
+      text-align: justify;
+    }
+
+    .important-info p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 920px) {
+      main {
+        width: min(100% - 24px, 760px);
+        padding-top: 24px;
+      }
+
+      .topbar,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        position: static;
+      }
+    }
+
+    @media (max-width: 620px) {
+      main {
+        width: min(100% - 18px, 520px);
+      }
+
+      .rates,
+      .segmented,
+      .currency-options,
+      .timeframe-options,
+      .charges,
+      .cards,
+      .metric {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-head {
+        display: grid;
+      }
+
+      .chart-wrap {
+        min-height: 320px;
+      }
+
+      canvas {
+        height: 320px;
+      }
+
+      .table-scroll {
+        overflow-x: auto;
+      }
+
+      th,
+      td {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="topbar" aria-labelledby="page-title">
+      <div>
+        <h1 id="page-title">Regular Investment Calculator</h1>
+        <p class="intro">Compare how a recurring investment could grow over time across low, medium, and high annual growth rates.</p>
+      </div>
+    </section>
+
+    <section class="layout">
+      <form class="controls" id="calculator" aria-label="Investment settings">
+        <div class="panel control-box">
+          <div class="field">
+            <label for="client-name">Client Name:</label>
+            <input id="client-name" name="client-name" type="text" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="prepared-by">Prepared by</label>
+            <input id="prepared-by" name="prepared-by" type="text" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="prepared-date">Date</label>
+            <input id="prepared-date" name="prepared-date" type="text" readonly>
+          </div>
+        </div>
+
+        <div class="panel control-box">
+          <div class="label">Currency</div>
+          <div class="currency-options" role="radiogroup" aria-label="Currency">
+            <input id="currency-gbp" type="radio" name="currency" value="GBP" checked>
+            <label for="currency-gbp">GBP (£)</label>
+            <input id="currency-usd" type="radio" name="currency" value="USD">
+            <label for="currency-usd">USD ($)</label>
+            <input id="currency-eur" type="radio" name="currency" value="EUR">
+            <label for="currency-eur">EUR (€)</label>
+          </div>
+        </div>
+
+        <div class="panel control-box">
+          <label for="initial-investment">
+            <span>Initial investment</span>
+            <span class="amount-value" id="initial-investment-value">£0</span>
+          </label>
+          <div class="slider-wrap">
+            <span class="slider-value" id="initial-slider-value">£0</span>
+            <input id="initial-investment" name="initial-investment" type="range" min="0" max="100000" step="500" value="0">
+          </div>
+          <div class="range-limits" aria-hidden="true">
+            <span id="initial-min">£0</span>
+            <span id="initial-max">£100,000</span>
+          </div>
+        </div>
+
+        <div class="panel control-box">
+          <label for="regular-investment">
+            <span>Regular investment amount</span>
+            <span class="amount-value" id="regular-investment-value">£500</span>
+          </label>
+          <div class="slider-wrap">
+            <span class="slider-value" id="regular-slider-value">£500</span>
+            <input id="regular-investment" name="regular-investment" type="range" min="500" max="5000" step="50" value="500">
+          </div>
+          <div class="range-limits" aria-hidden="true">
+            <span id="regular-min">£500</span>
+            <span id="regular-max">£5,000</span>
+          </div>
+        </div>
+
+        <div class="panel control-box">
+          <div class="label">Investment frequency</div>
+          <div class="segmented" role="radiogroup" aria-label="Investment frequency">
+            <input id="monthly" type="radio" name="frequency" value="monthly" checked>
+            <label for="monthly">Monthly</label>
+            <input id="quarterly" type="radio" name="frequency" value="quarterly">
+            <label for="quarterly">Quarterly</label>
+            <input id="annually" type="radio" name="frequency" value="annually">
+            <label for="annually">Annually</label>
+          </div>
+        </div>
+
+        <div class="panel control-box">
+          <div class="label">Annual growth rate assumptions</div>
+          <div class="rate-summary" aria-live="polite">
+            <div class="rate-summary-item">
+              <span>Low</span>
+              <strong id="low-rate-summary">5.0% pa</strong>
+            </div>
+            <div class="rate-summary-item">
+              <span>Medium</span>
+              <strong id="medium-rate-summary">7.0% pa</strong>
+            </div>
+            <div class="rate-summary-item">
+              <span>High</span>
+              <strong id="high-rate-summary">9.0% pa</strong>
+            </div>
+          </div>
+          <button class="rate-edit-toggle" id="rate-edit-toggle" type="button" aria-expanded="false" aria-controls="rate-editor">Change growth rates</button>
+          <div class="rates" id="rate-editor" hidden>
+            <label class="rate-field">
+              <span>Low</span>
+              <input id="low-rate" type="number" min="-20" max="50" step="0.1" value="5" aria-label="Low annual growth rate">
+            </label>
+            <label class="rate-field">
+              <span>Medium</span>
+              <input id="medium-rate" type="number" min="-20" max="50" step="0.1" value="7" aria-label="Medium annual growth rate">
+            </label>
+            <label class="rate-field">
+              <span>High</span>
+              <input id="high-rate" type="number" min="-20" max="50" step="0.1" value="9" aria-label="High annual growth rate">
+            </label>
+          </div>
+        </div>
+
+        <div class="panel control-box">
+          <div class="label">Charges</div>
+          <div class="charge-summary" aria-live="polite">
+            <div class="rate-summary-item">
+              <span>Contribution charge</span>
+              <strong id="contribution-charge-summary">1.0%</strong>
+            </div>
+            <div class="rate-summary-item">
+              <span>Annual management charge</span>
+              <strong id="management-charge-summary">1.0% pa</strong>
+            </div>
+          </div>
+          <button class="rate-edit-toggle" id="charge-edit-toggle" type="button" aria-expanded="false" aria-controls="charge-editor">Change charges</button>
+          <div class="charges" id="charge-editor" hidden>
+            <label class="rate-field">
+              <span>Contribution charge (%)</span>
+              <input id="contribution-charge" type="number" min="0" max="10" step="0.1" value="1" aria-label="Contribution charge">
+            </label>
+            <label class="rate-field">
+              <span>Annual management charge (%)</span>
+              <input id="management-charge" type="number" min="0" max="10" step="0.1" value="1" aria-label="Annual management charge">
+            </label>
+          </div>
+        </div>
+
+      </form>
+
+      <section class="results">
+        <div class="panel control-box">
+          <div class="label">Time frame</div>
+          <div class="timeframe-options" role="radiogroup" aria-label="Time frame">
+            <input id="timeframe-5" type="radio" name="timeframe" value="5">
+            <label for="timeframe-5">5 years</label>
+            <input id="timeframe-10" type="radio" name="timeframe" value="10" checked>
+            <label for="timeframe-10">10 years</label>
+            <input id="timeframe-15" type="radio" name="timeframe" value="15">
+            <label for="timeframe-15">15 years</label>
+            <input id="timeframe-20" type="radio" name="timeframe" value="20">
+            <label for="timeframe-20">20 years</label>
+          </div>
+        </div>
+
+        <h2 class="section-label" id="outcomes-title">10-year outcomes</h2>
+        <div class="cards" aria-live="polite">
+          <div class="panel metric" style="border-color: var(--low)">
+            <span>Low Growth</span>
+            <div class="metric-row">
+              <span class="metric-label">Final value</span>
+              <strong id="low-value">£0</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Growth</span>
+              <small id="low-return">£0</small>
+            </div>
+          </div>
+          <div class="panel metric" style="border-color: var(--medium)">
+            <span>Medium Growth</span>
+            <div class="metric-row">
+              <span class="metric-label">Final value</span>
+              <strong id="medium-value">£0</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Growth</span>
+              <small id="medium-return">£0</small>
+            </div>
+          </div>
+          <div class="panel metric" style="border-color: var(--high)">
+            <span>High Growth</span>
+            <div class="metric-row">
+              <span class="metric-label">Final value</span>
+              <strong id="high-value">£0</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Growth</span>
+              <small id="high-return">£0</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="chart-head">
+            <div>
+              <h2 class="section-label" id="projection-title">Projection graph</h2>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="projection-chart" aria-label="Projected investment values over 10 years" role="img"></canvas>
+          </div>
+        </div>
+
+        <div class="panel table-panel">
+          <h2 class="section-label table-title">Milestone values</h2>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Invested</th>
+                  <th>Low</th>
+                  <th>Medium</th>
+                  <th>High</th>
+                </tr>
+              </thead>
+              <tbody id="projection-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="download-button" id="download-pdf" type="button">Download PDF</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel important-info" aria-labelledby="important-information-title">
+      <h2 class="section-label" id="important-information-title">Important Information</h2>
+      <p>This calculator has been produced for illustrative purposes only and is intended to demonstrate the potential value of regular investments over time based on the assumptions selected by the user. It does not constitute financial advice, a recommendation to invest, or a guarantee of future investment performance.</p>
+      <p>The assumed rates of return used within this illustration are hypothetical, are net of applicable investment and product charges unless otherwise stated, and may be amended by the user. They are provided solely for illustrative purposes and should not be regarded as forecasts, projections or guarantees of future investment returns.</p>
+      <p>The value of investments, and any income derived from them, may rise or fall due to market movements, and investors may receive back less than the amount originally invested. Actual investment performance is unlikely to match the assumed rates used in this illustration and may differ materially.</p>
+      <p>Unless otherwise stated, the illustration does not take account of taxation, inflation, changes in exchange rates or adviser remuneration not included within the assumed charges. These factors may have a significant impact on actual investment outcomes.</p>
+      <p>The adviser is responsible for ensuring that the assumptions used are appropriate for the client's circumstances and for explaining the purpose and limitations of this illustration. TAM Asset Management International Ltd accepts no liability for any loss or investment outcome arising from reliance on the assumptions used or the illustrative values generated by this calculator.</p>
+    </section>
+  </main>
+
+  <script>
+    const palette = {
+      low: getCss("--low"),
+      medium: getCss("--medium"),
+      high: getCss("--high"),
+      ink: getCss("--ink"),
+      muted: getCss("--muted"),
+      line: getCss("--line")
+    };
+
+    const elements = {
+      form: document.querySelector("#calculator"),
+      clientName: document.querySelector("#client-name"),
+      preparedBy: document.querySelector("#prepared-by"),
+      preparedDate: document.querySelector("#prepared-date"),
+      initial: document.querySelector("#initial-investment"),
+      regular: document.querySelector("#regular-investment"),
+      amounts: {
+        initial: document.querySelector("#initial-investment-value"),
+        regular: document.querySelector("#regular-investment-value"),
+        initialBubble: document.querySelector("#initial-slider-value"),
+        regularBubble: document.querySelector("#regular-slider-value"),
+        initialMin: document.querySelector("#initial-min"),
+        initialMax: document.querySelector("#initial-max"),
+        regularMin: document.querySelector("#regular-min"),
+        regularMax: document.querySelector("#regular-max")
+      },
+      rates: {
+        low: document.querySelector("#low-rate"),
+        medium: document.querySelector("#medium-rate"),
+        high: document.querySelector("#high-rate")
+      },
+      charges: {
+        contribution: document.querySelector("#contribution-charge"),
+        management: document.querySelector("#management-charge")
+      },
+      chargeSummaries: {
+        contribution: document.querySelector("#contribution-charge-summary"),
+        management: document.querySelector("#management-charge-summary")
+      },
+      rateSummaries: {
+        low: document.querySelector("#low-rate-summary"),
+        medium: document.querySelector("#medium-rate-summary"),
+        high: document.querySelector("#high-rate-summary")
+      },
+      rateToggle: document.querySelector("#rate-edit-toggle"),
+      rateEditor: document.querySelector("#rate-editor"),
+      chargeToggle: document.querySelector("#charge-edit-toggle"),
+      chargeEditor: document.querySelector("#charge-editor"),
+      downloadPdf: document.querySelector("#download-pdf"),
+      outcomesTitle: document.querySelector("#outcomes-title"),
+      projectionTitle: document.querySelector("#projection-title"),
+      table: document.querySelector("#projection-table"),
+      canvas: document.querySelector("#projection-chart"),
+      metrics: {
+        low: {
+          value: document.querySelector("#low-value"),
+          growth: document.querySelector("#low-return")
+        },
+        medium: {
+          value: document.querySelector("#medium-value"),
+          growth: document.querySelector("#medium-return")
+        },
+        high: {
+          value: document.querySelector("#high-value"),
+          growth: document.querySelector("#high-return")
+        }
+      }
+    };
+
+    const currencyLocales = {
+      GBP: "en-GB",
+      USD: "en-US",
+      EUR: "en-IE"
+    };
+
+    elements.form.addEventListener("input", update);
+    elements.form.addEventListener("change", update);
+    elements.rateToggle.addEventListener("click", toggleRateEditor);
+    elements.chargeToggle.addEventListener("click", toggleChargeEditor);
+    elements.downloadPdf.addEventListener("click", downloadPdfReport);
+    document.querySelectorAll("input[name='timeframe']").forEach((input) => input.addEventListener("change", update));
+    window.addEventListener("resize", update);
+    setPreparedDate();
+    update();
+
+    function update() {
+      const settings = readSettings();
+      const results = {
+        low: project(settings, settings.rates.low),
+        medium: project(settings, settings.rates.medium),
+        high: project(settings, settings.rates.high)
+      };
+
+      const totalInvested = investedByYear(settings, settings.years);
+      renderAmountControls(settings);
+      renderGrowthSummary(settings);
+      renderChargeSummary(settings);
+      elements.outcomesTitle.textContent = `${settings.years}-year outcomes`;
+      elements.projectionTitle.textContent = "Projection graph";
+      elements.canvas.setAttribute("aria-label", `Projected investment values over ${settings.years} years`);
+
+      renderMetrics(results, totalInvested);
+      renderTable(results, settings);
+      drawChart(results, settings);
+    }
+
+    function toggleRateEditor() {
+      const isHidden = elements.rateEditor.hidden;
+      elements.rateEditor.hidden = !isHidden;
+      elements.rateToggle.setAttribute("aria-expanded", String(isHidden));
+      elements.rateToggle.textContent = isHidden ? "Done" : "Change growth rates";
+    }
+
+    function toggleChargeEditor() {
+      const isHidden = elements.chargeEditor.hidden;
+      elements.chargeEditor.hidden = !isHidden;
+      elements.chargeToggle.setAttribute("aria-expanded", String(isHidden));
+      elements.chargeToggle.textContent = isHidden ? "Done" : "Change charges";
+    }
+
+    function setPreparedDate() {
+      elements.preparedDate.value = new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      }).format(new Date());
+    }
+
+    function readSettings() {
+      const frequency = document.querySelector("input[name='frequency']:checked").value;
+
+      return {
+        initial: positiveNumber(elements.initial.value),
+        regular: positiveNumber(elements.regular.value),
+        clientName: elements.clientName.value.trim(),
+        preparedBy: elements.preparedBy.value.trim(),
+        preparedDate: elements.preparedDate.value,
+        currency: document.querySelector("input[name='currency']:checked").value,
+        years: numberOrDefault(document.querySelector("input[name='timeframe']:checked").value, 10),
+        frequency,
+        rates: {
+          low: numberOrDefault(elements.rates.low.value, 5),
+          medium: numberOrDefault(elements.rates.medium.value, 7),
+          high: numberOrDefault(elements.rates.high.value, 9)
+        },
+        charges: {
+          contribution: positiveNumber(elements.charges.contribution.value),
+          management: positiveNumber(elements.charges.management.value)
+        }
+      };
+    }
+
+    function project(settings, annualRate) {
+      const monthlyRate = Math.pow(1 + annualRate / 100, 1 / 12) - 1;
+      const monthlyManagementCharge = Math.pow(1 + settings.charges.management / 100, 1 / 12) - 1;
+      const contributionMultiplier = Math.max(0, 1 - settings.charges.contribution / 100);
+      const interval = frequencyInterval(settings.frequency);
+      let value = settings.initial * contributionMultiplier;
+      const points = [{ month: 0, year: 0, value }];
+
+      for (let month = 1; month <= settings.years * 12; month += 1) {
+        value *= 1 + monthlyRate;
+        value *= 1 - monthlyManagementCharge;
+
+        if (month % interval === 0) {
+          value += settings.regular * contributionMultiplier;
+        }
+
+        if (month % 12 === 0) {
+          points.push({ month, year: month / 12, value });
+        }
+      }
+
+      return points;
+    }
+
+    function renderAmountControls(settings) {
+      const initialValue = formatMoney(settings.initial);
+      const regularValue = formatMoney(settings.regular);
+      elements.amounts.initial.textContent = initialValue;
+      elements.amounts.regular.textContent = regularValue;
+      elements.amounts.initialBubble.textContent = initialValue;
+      elements.amounts.regularBubble.textContent = regularValue;
+      positionSliderBubble(elements.initial, elements.amounts.initialBubble);
+      positionSliderBubble(elements.regular, elements.amounts.regularBubble);
+      elements.amounts.initialMin.textContent = formatMoney(Number(elements.initial.min));
+      elements.amounts.initialMax.textContent = formatMoney(Number(elements.initial.max));
+      elements.amounts.regularMin.textContent = formatMoney(Number(elements.regular.min));
+      elements.amounts.regularMax.textContent = formatMoney(Number(elements.regular.max));
+    }
+
+    function positionSliderBubble(slider, bubble) {
+      const min = Number(slider.min);
+      const max = Number(slider.max);
+      const value = Number(slider.value);
+      const percent = max === min ? 0 : ((value - min) / (max - min)) * 100;
+      const thumbOffset = 11 - percent * 0.22;
+      bubble.style.setProperty("--slider-position", `calc(${percent}% + ${thumbOffset}px)`);
+    }
+
+    function renderGrowthSummary(settings) {
+      elements.rateSummaries.low.textContent = `${formatRate(settings.rates.low)} pa`;
+      elements.rateSummaries.medium.textContent = `${formatRate(settings.rates.medium)} pa`;
+      elements.rateSummaries.high.textContent = `${formatRate(settings.rates.high)} pa`;
+    }
+
+    function renderChargeSummary(settings) {
+      elements.chargeSummaries.contribution.textContent = formatRate(settings.charges.contribution);
+      elements.chargeSummaries.management.textContent = `${formatRate(settings.charges.management)} pa`;
+    }
+
+    function renderMetrics(results, totalInvested) {
+      Object.entries(results).forEach(([key, points]) => {
+        const finalValue = points[points.length - 1].value;
+        elements.metrics[key].value.textContent = formatMoney(finalValue);
+        elements.metrics[key].growth.textContent = formatGrowthMoney(finalValue - totalInvested);
+      });
+    }
+
+    function renderTable(results, settings) {
+      const rows = [];
+
+      milestoneYears(settings.years).forEach((year) => {
+        rows.push(`
+          <tr>
+            <td>Year ${year}</td>
+            <td>${formatMoney(investedByYear(settings, year))}</td>
+            <td>${formatMoney(results.low[year].value)}</td>
+            <td>${formatMoney(results.medium[year].value)}</td>
+            <td>${formatMoney(results.high[year].value)}</td>
+          </tr>
+        `);
+      });
+
+      elements.table.innerHTML = rows.join("");
+    }
+
+    function downloadPdfReport() {
+      const settings = readSettings();
+      const results = {
+        low: project(settings, settings.rates.low),
+        medium: project(settings, settings.rates.medium),
+        high: project(settings, settings.rates.high)
+      };
+      const totalInvested = investedByYear(settings, settings.years);
+      const pdfBytes = buildPdfReport(settings, results, totalInvested);
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `investment-projection-${new Date().toISOString().slice(0, 10)}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+
+    function buildPdfReport(settings, results, totalInvested) {
+      const pdf = createPdf();
+      const scenarios = [
+        { key: "low", label: "Low Growth", rate: settings.rates.low, color: [0.48, 0.5, 0.53] },
+        { key: "medium", label: "Medium Growth", rate: settings.rates.medium, color: [0.29, 0.33, 0.36] },
+        { key: "high", label: "High Growth", rate: settings.rates.high, color: [0.93, 0.11, 0.18] }
+      ];
+
+      pdf.rect(0, 0, 595.28, 12, [0.93, 0.11, 0.18]);
+      pdf.text("Regular Investment Illustration", 42, 54, 22, "F2", [0.18, 0.2, 0.22]);
+      pdf.text(`Date: ${settings.preparedDate}`, 438, 54, 10, "F1", [0.44, 0.45, 0.48]);
+      pdf.text(`Client: ${settings.clientName || "Not specified"}`, 42, 78, 9, "F1", [0.44, 0.45, 0.48]);
+      pdf.text(`Prepared by: ${settings.preparedBy || "Not specified"}`, 330, 78, 9, "F1", [0.44, 0.45, 0.48]);
+      pdf.line(42, 94, 553, 94, [0.88, 0.89, 0.9], 1);
+
+      const inputRows = [
+        ["Initial investment", formatPdfMoney(settings.initial, settings.currency)],
+        [`Regular ${frequencyLabel(settings.frequency)} investment`, formatPdfMoney(settings.regular, settings.currency)],
+        ["Projection period", `${settings.years} years`],
+        [`Total invested over ${settings.years} years`, formatPdfMoney(totalInvested, settings.currency)]
+      ];
+      const growthRows = [
+        ["Low", `${formatRate(settings.rates.low)} pa`],
+        ["Medium", `${formatRate(settings.rates.medium)} pa`],
+        ["High", `${formatRate(settings.rates.high)} pa`]
+      ];
+      const chargeRows = [
+        ["Contribution charge", `${formatRate(settings.charges.contribution)}`],
+        ["Annual management charge", `${formatRate(settings.charges.management)} pa`]
+      ];
+
+      pdf.text("Investment profile", 42, 116, 12, "F2", [0.18, 0.2, 0.22]);
+      drawBoxedKeyValueGrid(pdf, inputRows, 42, 132, 500, 4);
+      pdf.text("Growth rates", 42, 190, 12, "F2", [0.18, 0.2, 0.22]);
+      drawBoxedKeyValueGrid(pdf, growthRows, 42, 206, 300, 3);
+      pdf.text("Charges", 370, 190, 12, "F2", [0.18, 0.2, 0.22]);
+      drawBoxedKeyValueGrid(pdf, chargeRows, 370, 206, 172, 2);
+
+      pdf.text(`${settings.years}-year outcomes`, 42, 276, 12, "F2", [0.18, 0.2, 0.22]);
+      scenarios.forEach((scenario, index) => {
+        const x = 42 + index * 171;
+        const finalValue = results[scenario.key][settings.years].value;
+        pdf.rect(x, 294, 154, 70, [0.98, 0.98, 0.98]);
+        pdf.rect(x, 294, 5, 70, scenario.color);
+        pdf.text(scenario.label, x + 16, 314, 9, "F2", [0.44, 0.45, 0.48]);
+        pdf.text(formatPdfMoney(finalValue, settings.currency), x + 16, 338, 16, "F2", [0.18, 0.2, 0.22]);
+        pdf.text(`Growth ${formatPdfGrowthMoney(finalValue - totalInvested, settings.currency)}`, x + 16, 356, 9, "F1", [0.44, 0.45, 0.48]);
+      });
+
+      pdf.text("Projection graph", 42, 404, 12, "F2", [0.18, 0.2, 0.22]);
+      drawPdfChart(pdf, settings, results, 42, 424, 488, 118, scenarios);
+
+      pdf.text("Milestone values", 42, 582, 12, "F2", [0.18, 0.2, 0.22]);
+      drawMilestoneTable(pdf, settings, results, 42, 602);
+
+      drawPdfImportantInformation(pdf, 12, 730, 571);
+
+      return pdf.output();
+    }
+
+    function drawBoxedKeyValueGrid(pdf, rows, x, y, width, columns) {
+      const columnWidth = width / columns;
+      rows.forEach(([label, value], index) => {
+        const col = index % columns;
+        const row = Math.floor(index / columns);
+        const cellX = x + col * columnWidth + 3;
+        const cellY = y + row * 34;
+        pdf.rect(cellX - 3, cellY - 8, columnWidth - 8, 30, [0.98, 0.98, 0.98]);
+        pdf.text(label, cellX + 7, cellY, 6.8, "F1", [0.44, 0.45, 0.48]);
+        pdf.text(value, cellX + 7, cellY + 12, 8.6, "F2", [0.18, 0.2, 0.22]);
+      });
+    }
+
+    function drawPdfImportantInformation(pdf, x, y, width) {
+      pdf.text("Important Information", x, y, 9, "F2", [0.18, 0.2, 0.22]);
+      const paragraphs = [
+        "This calculator has been produced for illustrative purposes only and is intended to demonstrate the potential value of regular investments over time based on the assumptions selected by the user. It does not constitute financial advice, a recommendation to invest, or a guarantee of future investment performance.",
+        "The assumed rates of return used within this illustration are hypothetical, are net of applicable investment and product charges unless otherwise stated, and may be amended by the user. They are provided solely for illustrative purposes and should not be regarded as forecasts, projections or guarantees of future investment returns.",
+        "The value of investments, and any income derived from them, may rise or fall due to market movements, and investors may receive back less than the amount originally invested. Actual investment performance is unlikely to match the assumed rates used in this illustration and may differ materially.",
+        "Unless otherwise stated, the illustration does not take account of taxation, inflation, changes in exchange rates or adviser remuneration not included within the assumed charges. These factors may have a significant impact on actual investment outcomes.",
+        "The adviser is responsible for ensuring that the assumptions used are appropriate for the client's circumstances and for explaining the purpose and limitations of this illustration. TAM Asset Management International Ltd accepts no liability for any loss or investment outcome arising from reliance on the assumptions used or the illustrative values generated by this calculator."
+      ];
+      let lineY = y + 13;
+      paragraphs.forEach((paragraph) => {
+        wrapPdfText(paragraph, 185).forEach((line) => {
+          pdf.text(line, x, lineY, 5.2, "F1", [0.44, 0.45, 0.48]);
+          lineY += 6.1;
+        });
+        lineY += 2.4;
+      });
+      pdf.line(x, 822, x + width, 822, [0.88, 0.89, 0.9], 0.6);
+    }
+
+    function wrapPdfText(text, maxChars) {
+      const words = text.split(/\s+/);
+      const lines = [];
+      let line = "";
+      words.forEach((word) => {
+        const nextLine = line ? `${line} ${word}` : word;
+        if (nextLine.length > maxChars && line) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = nextLine;
+        }
+      });
+      if (line) {
+        lines.push(line);
+      }
+      return lines;
+    }
+
+    function drawMilestoneTable(pdf, settings, results, x, y) {
+      const widths = [72, 104, 104, 104, 104];
+      const headers = ["Year", "Invested", "Low", "Medium", "High"];
+      const rowHeight = 22;
+      const rows = milestoneYears(settings.years);
+      let colX = x;
+
+      pdf.rect(x, y, widths.reduce((sum, width) => sum + width, 0), rowHeight, [0.95, 0.95, 0.96]);
+      headers.forEach((header, index) => {
+        pdf.text(header, colX + 8, y + 15, 8, "F2", [0.44, 0.45, 0.48]);
+        colX += widths[index];
+      });
+
+      rows.forEach((year, rowIndex) => {
+        const rowY = y + rowHeight * (rowIndex + 1);
+        const fill = rowIndex % 2 === 0 ? [1, 1, 1] : [0.98, 0.98, 0.98];
+        const values = [
+          `Year ${year}`,
+          formatPdfMoney(investedByYear(settings, year), settings.currency),
+          formatPdfMoney(results.low[year].value, settings.currency),
+          formatPdfMoney(results.medium[year].value, settings.currency),
+          formatPdfMoney(results.high[year].value, settings.currency)
+        ];
+        pdf.rect(x, rowY, widths.reduce((sum, width) => sum + width, 0), rowHeight, fill);
+        colX = x;
+        values.forEach((value, index) => {
+          pdf.text(value, colX + 8, rowY + 15, 8, index === 0 ? "F2" : "F1", [0.18, 0.2, 0.22]);
+          colX += widths[index];
+        });
+      });
+
+      const tableWidth = widths.reduce((sum, width) => sum + width, 0);
+      pdf.line(x, y, x + tableWidth, y, [0.88, 0.89, 0.9], 1);
+      pdf.line(x, y + rowHeight * (rows.length + 1), x + tableWidth, y + rowHeight * (rows.length + 1), [0.88, 0.89, 0.9], 1);
+    }
+
+    function drawPdfChart(pdf, settings, results, x, y, width, height, scenarios) {
+      const padding = { top: 8, right: 112, bottom: 24, left: 54 };
+      const chartX = x + padding.left;
+      const chartY = y + padding.top;
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+      const maxValue = niceMax(Math.max(
+        ...results.low.map(point => point.value),
+        ...results.medium.map(point => point.value),
+        ...results.high.map(point => point.value),
+        investedByYear(settings, settings.years)
+      ));
+
+      pdf.rect(x, y, width, height, [1, 1, 1]);
+      for (let i = 0; i <= 4; i += 1) {
+        const value = maxValue * (i / 4);
+        const lineY = chartY + chartHeight - chartHeight * (i / 4);
+        pdf.line(chartX, lineY, chartX + chartWidth, lineY, [0.9, 0.91, 0.92], 0.6);
+        pdf.text(shortPdfMoney(value, settings.currency), x + 4, lineY + 3, 7, "F1", [0.44, 0.45, 0.48]);
+      }
+
+      xAxisYears(settings.years).forEach((year) => {
+        const tickX = chartX + chartWidth * (year / settings.years);
+        pdf.text(String(year), tickX - 3, y + height - 4, 7, "F1", [0.44, 0.45, 0.48]);
+      });
+      pdf.text("Years", chartX + chartWidth / 2 - 10, y + height + 8, 7, "F2", [0.44, 0.45, 0.48]);
+
+      pdf.band(
+        results.high.map((point) => ({
+          x: chartX + chartWidth * (point.year / settings.years),
+          y: chartY + chartHeight - chartHeight * (point.value / maxValue)
+        })),
+        results.low.map((point) => ({
+          x: chartX + chartWidth * (point.year / settings.years),
+          y: chartY + chartHeight - chartHeight * (point.value / maxValue)
+        })),
+        [1, 0.93, 0.94]
+      );
+
+      scenarios.forEach((scenario) => {
+        const points = results[scenario.key].map((point) => ({
+          x: chartX + chartWidth * (point.year / settings.years),
+          y: chartY + chartHeight - chartHeight * (point.value / maxValue)
+        }));
+        const lineWidth = scenario.key === "medium" ? 2.2 : 1.2;
+        const finalValue = results[scenario.key][settings.years].value;
+        pdf.polyline(points, scenario.color, lineWidth);
+        pdf.text(`${scenario.label}: ${shortPdfMoney(finalValue, settings.currency)}`, chartX + chartWidth + 8, points[points.length - 1].y + 2, 7, "F2", scenario.color);
+      });
+    }
+
+    function createPdf() {
+      const width = 595.28;
+      const height = 841.89;
+      const content = [];
+      const yPos = (y) => height - y;
+      const color = (values, operator) => `${values.map((value) => value.toFixed(3)).join(" ")} ${operator}`;
+
+      return {
+        text(text, x, y, size, font = "F1", fill = [0, 0, 0]) {
+          content.push(color(fill, "rg"));
+          content.push(`BT /${font} ${size} Tf ${x.toFixed(2)} ${yPos(y).toFixed(2)} Td (${escapePdfText(text)}) Tj ET`);
+        },
+        line(x1, y1, x2, y2, stroke = [0, 0, 0], lineWidth = 1) {
+          content.push(color(stroke, "RG"));
+          content.push(`${lineWidth} w ${x1.toFixed(2)} ${yPos(y1).toFixed(2)} m ${x2.toFixed(2)} ${yPos(y2).toFixed(2)} l S`);
+        },
+        polyline(points, stroke = [0, 0, 0], lineWidth = 1) {
+          if (points.length < 2) return;
+          content.push(color(stroke, "RG"));
+          content.push(`${lineWidth} w ${points.map((point, index) => `${point.x.toFixed(2)} ${yPos(point.y).toFixed(2)} ${index === 0 ? "m" : "l"}`).join(" ")} S`);
+        },
+        band(topPoints, bottomPoints, fill = [1, 1, 1]) {
+          if (topPoints.length < 2 || bottomPoints.length < 2) return;
+          const reversedBottom = [...bottomPoints].reverse();
+          const path = [
+            ...topPoints.map((point, index) => `${point.x.toFixed(2)} ${yPos(point.y).toFixed(2)} ${index === 0 ? "m" : "l"}`),
+            ...reversedBottom.map((point) => `${point.x.toFixed(2)} ${yPos(point.y).toFixed(2)} l`)
+          ].join(" ");
+          content.push(color(fill, "rg"));
+          content.push(`${path} h f`);
+        },
+        rect(x, y, rectWidth, rectHeight, fill = [1, 1, 1]) {
+          content.push(color(fill, "rg"));
+          content.push(`${x.toFixed(2)} ${yPos(y + rectHeight).toFixed(2)} ${rectWidth.toFixed(2)} ${rectHeight.toFixed(2)} re f`);
+        },
+        output() {
+          return writePdf(content.join("\n"), width, height);
+        }
+      };
+    }
+
+    function writePdf(pageContent, width, height) {
+      const objects = [
+        "<< /Type /Catalog /Pages 2 0 R >>",
+        "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>`,
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+        `<< /Length ${pageContent.length} >>\nstream\n${pageContent}\nendstream`
+      ];
+      let pdf = "%PDF-1.4\n";
+      const offsets = [0];
+
+      objects.forEach((object, index) => {
+        offsets.push(pdf.length);
+        pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+      });
+
+      const xrefOffset = pdf.length;
+      pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+      offsets.slice(1).forEach((offset) => {
+        pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
+      });
+      pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+      return pdf;
+    }
+
+    function drawChart(results, settings) {
+      const canvas = elements.canvas;
+      const ratio = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const width = Math.max(320, rect.width);
+      const height = Math.max(300, rect.height);
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const padding = {
+        top: 18,
+        right: width < 560 ? 120 : 160,
+        bottom: 42,
+        left: width < 560 ? 52 : 78
+      };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+      const maxValue = niceMax(Math.max(
+        ...results.low.map(point => point.value),
+        ...results.medium.map(point => point.value),
+        ...results.high.map(point => point.value),
+        investedByYear(settings, settings.years)
+      ));
+
+      drawGrid(ctx, width, height, padding, chartWidth, chartHeight, maxValue, settings.years);
+      drawRangeBand(ctx, results.low, results.high, padding, chartWidth, chartHeight, maxValue, settings.years);
+      drawSeries(ctx, results.low, palette.low, padding, chartWidth, chartHeight, maxValue, settings.years, 2);
+      drawSeries(ctx, results.high, palette.high, padding, chartWidth, chartHeight, maxValue, settings.years, 2);
+      drawSeries(ctx, results.medium, palette.medium, padding, chartWidth, chartHeight, maxValue, settings.years, 4);
+      drawEndLabel(ctx, "Low Growth", results.low, palette.low, padding, chartWidth, chartHeight, maxValue, settings.currency);
+      drawEndLabel(ctx, "Medium Growth", results.medium, palette.medium, padding, chartWidth, chartHeight, maxValue, settings.currency);
+      drawEndLabel(ctx, "High Growth", results.high, palette.high, padding, chartWidth, chartHeight, maxValue, settings.currency);
+    }
+
+    function drawGrid(ctx, width, height, padding, chartWidth, chartHeight, maxValue, periodYears) {
+      ctx.save();
+      ctx.strokeStyle = palette.line;
+      ctx.fillStyle = palette.muted;
+      ctx.lineWidth = 1;
+      ctx.font = "700 12px Inter, system-ui, sans-serif";
+      ctx.textBaseline = "middle";
+
+      for (let i = 0; i <= 4; i += 1) {
+        const value = maxValue * (i / 4);
+        const y = padding.top + chartHeight - chartHeight * (i / 4);
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(width - padding.right, y);
+        ctx.stroke();
+        ctx.textAlign = "right";
+        ctx.fillText(shortMoney(value), padding.left - 10, y);
+      }
+
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      xAxisYears(periodYears).forEach((year) => {
+        const x = padding.left + chartWidth * (year / periodYears);
+        ctx.fillText(year.toString(), x, height - padding.bottom + 20);
+      });
+      ctx.font = "800 12px Inter, system-ui, sans-serif";
+      ctx.fillText("Years", padding.left + chartWidth / 2, height - 12);
+
+      ctx.restore();
+    }
+
+    function drawRangeBand(ctx, lowPoints, highPoints, padding, chartWidth, chartHeight, maxValue, periodYears) {
+      ctx.save();
+      ctx.fillStyle = "rgba(237, 27, 47, 0.055)";
+      ctx.beginPath();
+      highPoints.forEach((point, index) => {
+        const x = padding.left + chartWidth * (point.year / periodYears);
+        const y = padding.top + chartHeight - chartHeight * (point.value / maxValue);
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      [...lowPoints].reverse().forEach((point) => {
+        const x = padding.left + chartWidth * (point.year / periodYears);
+        const y = padding.top + chartHeight - chartHeight * (point.value / maxValue);
+        ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawSeries(ctx, points, color, padding, chartWidth, chartHeight, maxValue, periodYears, lineWidth = 3) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.beginPath();
+
+      points.forEach((point, index) => {
+        const x = padding.left + chartWidth * (point.year / periodYears);
+        const y = padding.top + chartHeight - chartHeight * (point.value / maxValue);
+
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+
+      ctx.stroke();
+
+      points.forEach((point, index) => {
+        if (index % 2 !== 0 && index !== points.length - 1) return;
+        const x = padding.left + chartWidth * (point.year / periodYears);
+        const y = padding.top + chartHeight - chartHeight * (point.value / maxValue);
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+      });
+
+      ctx.restore();
+    }
+
+    function drawEndLabel(ctx, label, points, color, padding, chartWidth, chartHeight, maxValue, currency) {
+      const finalPoint = points[points.length - 1];
+      const x = padding.left + chartWidth + 10;
+      const y = padding.top + chartHeight - chartHeight * (finalPoint.value / maxValue);
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.font = "800 12px Inter, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText(`${label}: ${shortMoneyForCurrency(finalPoint.value, currency)}`, x, y);
+      ctx.restore();
+    }
+
+    function investedByYear(settings, year) {
+      const months = year * 12;
+      const interval = frequencyInterval(settings.frequency);
+      return settings.initial + Math.floor(months / interval) * settings.regular;
+    }
+
+    function frequencyInterval(frequency) {
+      return {
+        monthly: 1,
+        quarterly: 3,
+        annually: 12
+      }[frequency];
+    }
+
+    function frequencyLabel(frequency) {
+      return {
+        monthly: "monthly",
+        quarterly: "quarterly",
+        annually: "annual"
+      }[frequency];
+    }
+
+    function milestoneYears(periodYears) {
+      const milestones = [3, 5, 10, 15, 20].filter((year) => year <= periodYears);
+      if (!milestones.includes(periodYears)) {
+        milestones.push(periodYears);
+      }
+      return milestones;
+    }
+
+    function xAxisYears(periodYears) {
+      const step = periodYears <= 10 ? 1 : periodYears <= 15 ? 3 : 5;
+      const ticks = [];
+      for (let year = 0; year <= periodYears; year += step) {
+        ticks.push(year);
+      }
+      if (!ticks.includes(periodYears)) {
+        ticks.push(periodYears);
+      }
+      return ticks;
+    }
+
+    function niceMax(value) {
+      if (value <= 0) return 50000;
+      return Math.ceil(value / 50000) * 50000;
+    }
+
+    function shortMoney(value) {
+      return shortMoneyForCurrency(value, readSettings().currency);
+    }
+
+    function shortMoneyForCurrency(value, currency) {
+      const symbol = currencySymbol(currency);
+      if (value >= 1000000) return `${symbol}${(value / 1000000).toFixed(1)}m`;
+      if (value >= 1000) return `${symbol}${Math.round(value / 1000)}k`;
+      return formatMoney(value);
+    }
+
+    function formatMoney(value) {
+      const currency = readSettings().currency;
+      return new Intl.NumberFormat(currencyLocales[currency], {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 0
+      }).format(Math.round(value));
+    }
+
+    function formatGrowthMoney(value) {
+      return `${value >= 0 ? "+" : ""}${formatMoney(value)}`;
+    }
+
+    function formatRate(value) {
+      return `${Number(value).toFixed(1)}%`;
+    }
+
+    function formatPdfMoney(value, currency) {
+      const formatted = new Intl.NumberFormat("en-GB", {
+        maximumFractionDigits: 0
+      }).format(Math.round(value));
+      return `${currency} ${formatted}`;
+    }
+
+    function formatPdfGrowthMoney(value, currency) {
+      return `${value >= 0 ? "+" : ""}${formatPdfMoney(value, currency)}`;
+    }
+
+    function shortPdfMoney(value, currency) {
+      if (value >= 1000000) return `${currency} ${(value / 1000000).toFixed(1)}m`;
+      if (value >= 1000) return `${currency} ${Math.round(value / 1000)}k`;
+      return `${currency} ${Math.round(value)}`;
+    }
+
+    function currencySymbol(currency) {
+      return {
+        GBP: "£",
+        USD: "$",
+        EUR: "€"
+      }[currency];
+    }
+
+    function positiveNumber(value) {
+      return Math.max(0, numberOrDefault(value, 0));
+    }
+
+    function numberOrDefault(value, fallback) {
+      const number = Number(value);
+      return Number.isFinite(number) ? number : fallback;
+    }
+
+    function escapePdfText(text) {
+      return String(text)
+        .replace(/[^\x20-\x7E]/g, "")
+        .replace(/\\/g, "\\\\")
+        .replace(/\(/g, "\\(")
+        .replace(/\)/g, "\\)");
+    }
+
+    function getCss(variable) {
+      return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+    }
+  </script>
+</body>
+</html>
