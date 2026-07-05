@@ -13,4 +13,3 @@ The calculator lets an adviser model:
 - Downloadable PDF illustration for client discussions
 
 Open `index.html` in a browser to use the calculator.
-
