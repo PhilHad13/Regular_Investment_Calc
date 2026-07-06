@@ -3,26 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Regular Investment Calculator</title>
+  <title>VFS Regular Savings Plan Illustration Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;850&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #2f3338;
-      --muted: #6f747b;
-      --line: #dfe3e7;
-      --paper: #f4f6f8;
+      --ink: #333333;
+      --muted: #6f737f;
+      --line: #e8e8e8;
+      --paper: #eeeeee;
       --panel: #ffffff;
-      --tam-blue: #005cab;
-      --tam-blue-dark: #004a89;
-      --tam-blue-90: #2d68b2;
-      --tam-blue-80: #4771b8;
-      --tam-grey-75: #636466;
-      --tam-grey-50: #949699;
-      --tam-grey-25: #c7c9cb;
-      --low: var(--tam-grey-50);
-      --medium: var(--tam-grey-75);
-      --high: var(--tam-blue);
-      --focus: var(--tam-blue);
-      --shadow: 0 14px 34px rgba(0, 92, 171, 0.09);
+      --vfs-navy: #171c48;
+      --vfs-slate: #404f7f;
+      --vfs-heading: #47507d;
+      --vfs-indigo: #1f2248;
+      --vfs-grey: #999999;
+      --vfs-light: #f5f5f5;
+      --low: var(--vfs-grey);
+      --medium: var(--vfs-indigo);
+      --high: var(--vfs-slate);
+      --focus: var(--vfs-navy);
+      --shadow: 0 14px 34px rgba(23, 28, 72, 0.1);
     }
 
     * {
@@ -35,7 +37,7 @@
 
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Mulish, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
       background: linear-gradient(180deg, #ffffff 0%, var(--paper) 100%);
       min-height: 100vh;
@@ -50,6 +52,13 @@
 
     .topbar {
       margin-bottom: 24px;
+    }
+
+    .brand-logo {
+      display: block;
+      width: min(180px, 48vw);
+      height: auto;
+      margin-bottom: 18px;
     }
 
     h1 {
@@ -67,7 +76,7 @@
       height: 5px;
       margin-top: 14px;
       border-radius: 999px;
-      background: var(--tam-blue);
+      background: var(--vfs-navy);
     }
 
     .intro {
@@ -141,7 +150,7 @@
     input:focus,
     select:focus {
       border-color: var(--focus);
-      box-shadow: 0 0 0 3px rgba(0, 92, 171, 0.14);
+      box-shadow: 0 0 0 3px rgba(23, 28, 72, 0.14);
     }
 
     input[readonly] {
@@ -178,7 +187,7 @@
       border: 3px solid white;
       border-radius: 50%;
       background: var(--focus);
-      box-shadow: 0 3px 10px rgba(0, 92, 171, 0.26);
+      box-shadow: 0 3px 10px rgba(23, 28, 72, 0.26);
       appearance: none;
     }
 
@@ -194,7 +203,7 @@
       border: 3px solid white;
       border-radius: 50%;
       background: var(--focus);
-      box-shadow: 0 3px 10px rgba(0, 92, 171, 0.26);
+      box-shadow: 0 3px 10px rgba(23, 28, 72, 0.26);
     }
 
     .amount-value {
@@ -217,7 +226,7 @@
       transform: translateX(-50%);
       min-width: 64px;
       border-radius: 999px;
-      background: var(--tam-blue);
+      background: var(--vfs-navy);
       color: white;
       font-size: 0.78rem;
       font-weight: 800;
@@ -225,7 +234,7 @@
       padding: 7px 9px;
       text-align: center;
       white-space: nowrap;
-      box-shadow: 0 6px 14px rgba(0, 92, 171, 0.18);
+      box-shadow: 0 6px 14px rgba(23, 28, 72, 0.18);
       pointer-events: none;
     }
 
@@ -239,7 +248,7 @@
       height: 0;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
-      border-top: 6px solid var(--tam-blue);
+      border-top: 6px solid var(--vfs-navy);
     }
 
     .range-limits {
@@ -265,7 +274,7 @@
 
     .timeframe-options {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
     }
 
@@ -300,8 +309,8 @@
     .currency-options input:checked + label,
     .timeframe-options input:checked + label {
       border-color: var(--focus);
-      background: #fff0f2;
-      color: var(--tam-blue-dark);
+      background: #eef1f8;
+      color: var(--vfs-navy);
       box-shadow: inset 0 0 0 1px var(--focus);
     }
 
@@ -311,7 +320,6 @@
       gap: 8px;
     }
 
-    .charges,
     .charge-summary {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -319,7 +327,13 @@
     }
 
     .charges {
+      display: grid;
+      gap: 14px;
       margin-top: 14px;
+    }
+
+    .charges {
+      grid-template-columns: 1fr;
     }
 
     .charges .rate-field {
@@ -364,7 +378,7 @@
       margin-top: 12px;
       border: 0;
       background: transparent;
-      color: var(--tam-blue-dark);
+      color: var(--vfs-navy);
       font: inherit;
       font-size: 0.78rem;
       font-weight: 750;
@@ -375,7 +389,7 @@
     }
 
     .rate-edit-toggle:focus {
-      outline: 3px solid rgba(0, 92, 171, 0.18);
+      outline: 3px solid rgba(23, 28, 72, 0.18);
       outline-offset: 3px;
     }
 
@@ -396,12 +410,12 @@
       width: 16px;
       height: 42px;
       border-radius: 3px;
-      background: linear-gradient(180deg, var(--tam-blue) 0%, var(--tam-blue-90) 58%, var(--tam-grey-50) 58%, var(--tam-grey-50) 100%);
+      background: linear-gradient(180deg, var(--vfs-navy) 0%, var(--vfs-slate) 58%, var(--vfs-grey) 58%, var(--vfs-grey) 100%);
     }
 
     .style-selected span {
       display: block;
-      color: var(--tam-blue);
+      color: var(--vfs-slate);
       font-size: 0.76rem;
       font-weight: 850;
       text-transform: uppercase;
@@ -472,24 +486,24 @@
     }
 
     .download-button {
-      border: 1px solid var(--tam-blue);
+      border: 1px solid var(--vfs-navy);
       border-radius: 6px;
-      background: var(--tam-blue);
+      background: var(--vfs-navy);
       color: white;
       font: inherit;
       font-weight: 800;
       padding: 11px 16px;
       cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0, 92, 171, 0.16);
+      box-shadow: 0 10px 20px rgba(23, 28, 72, 0.16);
     }
 
     .download-button:hover {
-      background: var(--tam-blue-dark);
-      border-color: var(--tam-blue-dark);
+      background: var(--vfs-indigo);
+      border-color: var(--vfs-indigo);
     }
 
     .download-button:focus {
-      outline: 3px solid rgba(0, 92, 171, 0.18);
+      outline: 3px solid rgba(23, 28, 72, 0.18);
       outline-offset: 3px;
     }
 
@@ -585,9 +599,24 @@
       font-size: 0.9rem;
     }
 
+    .table-panel .note {
+      margin: 0;
+      padding: 14px 18px 18px;
+      border-top: 1px solid var(--line);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      text-align: justify;
+    }
+
+    .table-panel .note strong {
+      color: var(--ink);
+      font-weight: 850;
+    }
+
     .important-info {
       margin-top: 28px;
       padding: 24px;
+      width: 100%;
     }
 
     .important-info h2 {
@@ -602,8 +631,59 @@
       text-align: justify;
     }
 
+    .important-info strong {
+      color: var(--ink);
+      font-weight: 850;
+    }
+
     .important-info p:last-child {
       margin-bottom: 0;
+    }
+
+    .company-address {
+      margin-top: 14px;
+      padding: 18px 24px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    .company-address strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-logos {
+      margin-top: 14px;
+      padding: 18px 24px;
+    }
+
+    .footer-logo-row {
+      display: grid;
+      grid-template-columns: minmax(90px, 140px) minmax(220px, 1fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    .footer-logo-row img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .anniversary-logo {
+      justify-self: center;
+      max-height: 88px;
+    }
+
+    .awards-logo {
+      justify-self: center;
+      width: min(100%, 720px);
     }
 
     @media (max-width: 920px) {
@@ -631,7 +711,7 @@
       .segmented,
       .currency-options,
       .timeframe-options,
-      .charges,
+      .charge-summary,
       .cards,
       .metric {
         grid-template-columns: 1fr;
@@ -657,6 +737,15 @@
       td {
         padding: 12px;
       }
+
+      .footer-logo-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .anniversary-logo {
+        max-height: 76px;
+      }
     }
   </style>
 </head>
@@ -664,8 +753,9 @@
   <main>
     <section class="topbar" aria-labelledby="page-title">
       <div>
-        <h1 id="page-title">Regular Investment Calculator</h1>
-        <p class="intro">Compare how a recurring investment could grow over time across low, medium, and high annual growth rates.</p>
+        <img class="brand-logo" src="vfs-logo.png" alt="VFS">
+        <h1 id="page-title">VFS Regular Savings Plan Illustration Calculator</h1>
+        <p class="intro">FLEXIBILITY / ACCESSIBILITY / GROWTH</p>
       </div>
     </section>
 
@@ -677,7 +767,7 @@
             <input id="client-name" name="client-name" type="text" autocomplete="name">
           </div>
           <div class="field">
-            <label for="prepared-by">Prepared by</label>
+            <label for="prepared-by">VFS Adviser:</label>
             <input id="prepared-by" name="prepared-by" type="text" autocomplete="name">
           </div>
           <div class="field">
@@ -690,8 +780,8 @@
           <div class="label">Style</div>
           <div class="style-selected" aria-label="Selected calculator style">
             <div>
-              <span>TAM Brand</span>
-              <strong>Corporate blue and grey</strong>
+              <span>VFS Brand</span>
+              <strong>Navy, slate and white</strong>
             </div>
           </div>
         </div>
@@ -766,7 +856,7 @@
               <strong id="high-rate-summary">9.0% pa</strong>
             </div>
           </div>
-          <button class="rate-edit-toggle" id="rate-edit-toggle" type="button" aria-expanded="false" aria-controls="rate-editor">Change growth rates</button>
+          <button class="rate-edit-toggle" id="rate-edit-toggle" type="button" aria-expanded="false" aria-controls="rate-editor">Customise Growth Rates</button>
           <div class="rates" id="rate-editor" hidden>
             <label class="rate-field">
               <span>Low</span>
@@ -787,24 +877,66 @@
           <div class="label">Charges</div>
           <div class="charge-summary" aria-live="polite">
             <div class="rate-summary-item">
-              <span>Contribution charge</span>
-              <strong id="contribution-charge-summary">1.0%</strong>
+              <span>Establishment charge</span>
+              <strong id="establishment-charge-summary">£500</strong>
+            </div>
+            <div class="rate-summary-item">
+              <span>Average Contribution Charge</span>
+              <strong id="contribution-charge-summary">£10</strong>
             </div>
             <div class="rate-summary-item">
               <span>Annual management charge</span>
-              <strong id="management-charge-summary">1.0% pa</strong>
+              <strong id="management-charge-summary">2.0% pa</strong>
+            </div>
+            <div class="rate-summary-item">
+              <span>Nominee Charge</span>
+              <strong id="nominee-charge-summary">£10 per quarter</strong>
             </div>
           </div>
-          <button class="rate-edit-toggle" id="charge-edit-toggle" type="button" aria-expanded="false" aria-controls="charge-editor">Change charges</button>
+          <button class="rate-edit-toggle" id="charge-edit-toggle" type="button" aria-expanded="false" aria-controls="charge-editor">Customise Standard Charges</button>
           <div class="charges" id="charge-editor" hidden>
-            <label class="rate-field">
-              <span>Contribution charge (%)</span>
-              <input id="contribution-charge" type="number" min="0" max="10" step="0.1" value="1" aria-label="Contribution charge">
-            </label>
-            <label class="rate-field">
-              <span>Annual management charge (%)</span>
-              <input id="management-charge" type="number" min="0" max="10" step="0.1" value="1" aria-label="Annual management charge">
-            </label>
+            <div>
+              <label for="establishment-charge">
+                <span>Establishment charge</span>
+                <span class="amount-value" id="establishment-charge-value">£500</span>
+              </label>
+              <div class="slider-wrap">
+                <span class="slider-value" id="establishment-slider-value">£500</span>
+                <input id="establishment-charge" type="range" min="0" max="500" step="10" value="500" aria-label="Establishment charge">
+              </div>
+              <div class="range-limits" aria-hidden="true">
+                <span id="establishment-min">£0</span>
+                <span id="establishment-max">£500</span>
+              </div>
+            </div>
+            <div>
+              <label for="contribution-charge-rate">
+                <span>Average Contribution Charge</span>
+                <span class="amount-value" id="contribution-charge-rate-value">2.0%</span>
+              </label>
+              <div class="slider-wrap">
+                <span class="slider-value" id="contribution-charge-slider-value">2.0%</span>
+                <input id="contribution-charge-rate" type="range" min="0" max="5" step="0.1" value="2" aria-label="Average contribution charge">
+              </div>
+              <div class="range-limits" aria-hidden="true">
+                <span id="contribution-charge-min">0%</span>
+                <span id="contribution-charge-max">5%</span>
+              </div>
+            </div>
+            <div>
+              <label for="management-charge">
+                <span>Annual management charge</span>
+                <span class="amount-value" id="management-charge-value">2.0%</span>
+              </label>
+              <div class="slider-wrap">
+                <span class="slider-value" id="management-charge-slider-value">2.0%</span>
+                <input id="management-charge" type="range" min="1" max="4" step="0.1" value="2" aria-label="Annual management charge">
+              </div>
+              <div class="range-limits" aria-hidden="true">
+                <span id="management-charge-min">1%</span>
+                <span id="management-charge-max">4%</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -822,13 +954,15 @@
             <label for="timeframe-15">15 years</label>
             <input id="timeframe-20" type="radio" name="timeframe" value="20">
             <label for="timeframe-20">20 years</label>
+            <input id="timeframe-25" type="radio" name="timeframe" value="25">
+            <label for="timeframe-25">25 years</label>
           </div>
         </div>
 
         <h2 class="section-label" id="outcomes-title">10-year outcomes</h2>
         <div class="cards" aria-live="polite">
           <div class="panel metric" style="border-color: var(--low)">
-            <span>Low Growth</span>
+            <span id="low-outcome-label">at 5.0% growth rate</span>
             <div class="metric-row">
               <span class="metric-label">Final value</span>
               <strong id="low-value">£0</strong>
@@ -839,7 +973,7 @@
             </div>
           </div>
           <div class="panel metric" style="border-color: var(--medium)">
-            <span>Medium Growth</span>
+            <span id="medium-outcome-label">at 7.0% growth rate</span>
             <div class="metric-row">
               <span class="metric-label">Final value</span>
               <strong id="medium-value">£0</strong>
@@ -850,7 +984,7 @@
             </div>
           </div>
           <div class="panel metric" style="border-color: var(--high)">
-            <span>High Growth</span>
+            <span id="high-outcome-label">at 9.0% growth rate</span>
             <div class="metric-row">
               <span class="metric-label">Final value</span>
               <strong id="high-value">£0</strong>
@@ -865,7 +999,7 @@
         <div class="panel chart-panel">
           <div class="chart-head">
             <div>
-              <h2 class="section-label" id="projection-title">Projection graph</h2>
+              <h2 class="section-label" id="projection-title">Investment Illustration</h2>
             </div>
           </div>
           <div class="chart-wrap">
@@ -874,7 +1008,7 @@
         </div>
 
         <div class="panel table-panel">
-          <h2 class="section-label table-title">Milestone values</h2>
+          <h2 class="section-label table-title">Plan Value / Surrender Value</h2>
           <div class="table-scroll">
             <table>
               <thead>
@@ -899,11 +1033,25 @@
 
     <section class="panel important-info" aria-labelledby="important-information-title">
       <h2 class="section-label" id="important-information-title">Important Information</h2>
-      <p>This calculator has been produced for illustrative purposes only and is intended to demonstrate the potential value of regular investments over time based on the assumptions selected by the user. It does not constitute financial advice, a recommendation to invest, or a guarantee of future investment performance.</p>
-      <p>The assumed rates of return used within this illustration are hypothetical, are net of applicable investment and product charges unless otherwise stated, and may be amended by the user. They are provided solely for illustrative purposes and should not be regarded as forecasts, projections or guarantees of future investment returns.</p>
-      <p>The value of investments, and any income derived from them, may rise or fall due to market movements, and investors may receive back less than the amount originally invested. Actual investment performance is unlikely to match the assumed rates used in this illustration and may differ materially.</p>
-      <p>Unless otherwise stated, the illustration does not take account of taxation, inflation, changes in exchange rates or adviser remuneration not included within the assumed charges. These factors may have a significant impact on actual investment outcomes.</p>
-      <p>The adviser is responsible for ensuring that the assumptions used are appropriate for the client's circumstances and for explaining the purpose and limitations of this illustration. TAM Asset Management International Ltd accepts no liability for any loss or investment outcome arising from reliance on the assumptions used or the illustrative values generated by this calculator.</p>
+      <p>The growth rates used in this illustration are for illustrative purposes only and are not guaranteed. Actual growth will depend on the performance of the underlying funds and may be lower than the contributions paid into the plan. The illustrated values allow for the deduction of the establishment charge, average contribution charge, annual management charge and nominee fees where applicable. The three rates of return do not represent upper or lower limits on investment performance.</p>
+      <p><strong>There are no surrender or redemption penalties, so the Plan Value equals the Surrender Value at all times.</strong></p>
+      <p>This illustration is provided for information purposes only. It does not constitute investment advice, a recommendation, a solicitation to invest, or an offer to buy or sell any security or investment product.</p>
+      <p>Neither VFS International Ltd nor any of its directors, employees or officers gives any warranty that the products or services illustrated are suitable for a client's needs or available in the client's jurisdiction. No liability is accepted for any loss, damage or investment outcome arising from reliance on this illustration.</p>
+      <p>Investment values can fall as well as rise, and past performance is not necessarily a guide to future performance. There is no guarantee of capital security, investment growth, income, or the actual or future performance of any underlying investment. Clients may receive back less than they invest.</p>
+      <p>Although care has been taken in preparing this information, no responsibility can be accepted for errors of fact or opinion. Investments may be exposed to risks including, but not limited to, interest rate risk, credit risk, inflation risk, liquidity risk, currency risk, market risk, reinvestment risk and call risk.</p>
+    </section>
+
+    <section class="panel company-address" aria-label="VFS International contact details">
+      <strong>VFS International Ltd</strong>
+      <div>10th Floor, Tower 1, NexTeracom Building, Ebene Cybercity, Mauritius</div>
+      <div>+230 466 3852 | info@vfsint.com | www.vfsint.com</div>
+    </section>
+
+    <section class="panel footer-logos" aria-label="VFS awards and anniversary logos">
+      <div class="footer-logo-row">
+        <img class="anniversary-logo" src="30yr-logo.svg" alt="30 years">
+        <img class="awards-logo" src="vfs-awards-logos.png" alt="VFS International awards">
+      </div>
     </section>
   </main>
 
@@ -929,10 +1077,22 @@
         regular: document.querySelector("#regular-investment-value"),
         initialBubble: document.querySelector("#initial-slider-value"),
         regularBubble: document.querySelector("#regular-slider-value"),
+        establishment: document.querySelector("#establishment-charge-value"),
+        establishmentBubble: document.querySelector("#establishment-slider-value"),
+        contributionRate: document.querySelector("#contribution-charge-rate-value"),
+        contributionRateBubble: document.querySelector("#contribution-charge-slider-value"),
+        management: document.querySelector("#management-charge-value"),
+        managementBubble: document.querySelector("#management-charge-slider-value"),
         initialMin: document.querySelector("#initial-min"),
         initialMax: document.querySelector("#initial-max"),
         regularMin: document.querySelector("#regular-min"),
-        regularMax: document.querySelector("#regular-max")
+        regularMax: document.querySelector("#regular-max"),
+        establishmentMin: document.querySelector("#establishment-min"),
+        establishmentMax: document.querySelector("#establishment-max"),
+        contributionRateMin: document.querySelector("#contribution-charge-min"),
+        contributionRateMax: document.querySelector("#contribution-charge-max"),
+        managementMin: document.querySelector("#management-charge-min"),
+        managementMax: document.querySelector("#management-charge-max")
       },
       rates: {
         low: document.querySelector("#low-rate"),
@@ -940,12 +1100,15 @@
         high: document.querySelector("#high-rate")
       },
       charges: {
-        contribution: document.querySelector("#contribution-charge"),
+        establishment: document.querySelector("#establishment-charge"),
+        contributionRate: document.querySelector("#contribution-charge-rate"),
         management: document.querySelector("#management-charge")
       },
       chargeSummaries: {
+        establishment: document.querySelector("#establishment-charge-summary"),
         contribution: document.querySelector("#contribution-charge-summary"),
-        management: document.querySelector("#management-charge-summary")
+        management: document.querySelector("#management-charge-summary"),
+        nominee: document.querySelector("#nominee-charge-summary")
       },
       rateSummaries: {
         low: document.querySelector("#low-rate-summary"),
@@ -963,14 +1126,17 @@
       canvas: document.querySelector("#projection-chart"),
       metrics: {
         low: {
+          label: document.querySelector("#low-outcome-label"),
           value: document.querySelector("#low-value"),
           growth: document.querySelector("#low-return")
         },
         medium: {
+          label: document.querySelector("#medium-outcome-label"),
           value: document.querySelector("#medium-value"),
           growth: document.querySelector("#medium-return")
         },
         high: {
+          label: document.querySelector("#high-outcome-label"),
           value: document.querySelector("#high-value"),
           growth: document.querySelector("#high-return")
         }
@@ -1006,10 +1172,10 @@
       renderGrowthSummary(settings);
       renderChargeSummary(settings);
       elements.outcomesTitle.textContent = `${settings.years}-year outcomes`;
-      elements.projectionTitle.textContent = "Projection graph";
+      elements.projectionTitle.textContent = "Investment Illustration";
       elements.canvas.setAttribute("aria-label", `Projected investment values over ${settings.years} years`);
 
-      renderMetrics(results, totalInvested);
+      renderMetrics(results, totalInvested, settings);
       renderTable(results, settings);
       drawChart(results, settings);
     }
@@ -1018,14 +1184,14 @@
       const isHidden = elements.rateEditor.hidden;
       elements.rateEditor.hidden = !isHidden;
       elements.rateToggle.setAttribute("aria-expanded", String(isHidden));
-      elements.rateToggle.textContent = isHidden ? "Done" : "Change growth rates";
+      elements.rateToggle.textContent = isHidden ? "Done" : "Customise Growth Rates";
     }
 
     function toggleChargeEditor() {
       const isHidden = elements.chargeEditor.hidden;
       elements.chargeEditor.hidden = !isHidden;
       elements.chargeToggle.setAttribute("aria-expanded", String(isHidden));
-      elements.chargeToggle.textContent = isHidden ? "Done" : "Change charges";
+      elements.chargeToggle.textContent = isHidden ? "Done" : "Customise Standard Charges";
     }
 
     function setPreparedDate() {
@@ -1054,8 +1220,11 @@
           high: numberOrDefault(elements.rates.high.value, 9)
         },
         charges: {
-          contribution: positiveNumber(elements.charges.contribution.value),
-          management: positiveNumber(elements.charges.management.value)
+          establishment: positiveNumber(elements.charges.establishment.value),
+          contributionRate: positiveNumber(elements.charges.contributionRate.value),
+          contribution: positiveNumber(elements.regular.value) * positiveNumber(elements.charges.contributionRate.value) / 100,
+          management: positiveNumber(elements.charges.management.value),
+          nominee: 10
         }
       };
     }
@@ -1063,9 +1232,9 @@
     function project(settings, annualRate) {
       const monthlyRate = Math.pow(1 + annualRate / 100, 1 / 12) - 1;
       const monthlyManagementCharge = Math.pow(1 + settings.charges.management / 100, 1 / 12) - 1;
-      const contributionMultiplier = Math.max(0, 1 - settings.charges.contribution / 100);
       const interval = frequencyInterval(settings.frequency);
-      let value = settings.initial * contributionMultiplier;
+      const netContribution = Math.max(0, settings.regular - settings.charges.contribution);
+      let value = Math.max(0, settings.initial - settings.charges.establishment);
       const points = [{ month: 0, year: 0, value }];
 
       for (let month = 1; month <= settings.years * 12; month += 1) {
@@ -1073,7 +1242,11 @@
         value *= 1 - monthlyManagementCharge;
 
         if (month % interval === 0) {
-          value += settings.regular * contributionMultiplier;
+          value += netContribution;
+        }
+
+        if (month % 3 === 0) {
+          value = Math.max(0, value - settings.charges.nominee);
         }
 
         if (month % 12 === 0) {
@@ -1087,16 +1260,34 @@
     function renderAmountControls(settings) {
       const initialValue = formatMoney(settings.initial);
       const regularValue = formatMoney(settings.regular);
+      const establishmentValue = formatMoney(settings.charges.establishment);
+      const contributionRateValue = formatRate(settings.charges.contributionRate);
+      const managementValue = formatRate(settings.charges.management);
       elements.amounts.initial.textContent = initialValue;
       elements.amounts.regular.textContent = regularValue;
+      elements.amounts.establishment.textContent = establishmentValue;
+      elements.amounts.contributionRate.textContent = contributionRateValue;
+      elements.amounts.management.textContent = managementValue;
       elements.amounts.initialBubble.textContent = initialValue;
       elements.amounts.regularBubble.textContent = regularValue;
+      elements.amounts.establishmentBubble.textContent = establishmentValue;
+      elements.amounts.contributionRateBubble.textContent = contributionRateValue;
+      elements.amounts.managementBubble.textContent = managementValue;
       positionSliderBubble(elements.initial, elements.amounts.initialBubble);
       positionSliderBubble(elements.regular, elements.amounts.regularBubble);
+      positionSliderBubble(elements.charges.establishment, elements.amounts.establishmentBubble);
+      positionSliderBubble(elements.charges.contributionRate, elements.amounts.contributionRateBubble);
+      positionSliderBubble(elements.charges.management, elements.amounts.managementBubble);
       elements.amounts.initialMin.textContent = formatMoney(Number(elements.initial.min));
       elements.amounts.initialMax.textContent = formatMoney(Number(elements.initial.max));
       elements.amounts.regularMin.textContent = formatMoney(Number(elements.regular.min));
       elements.amounts.regularMax.textContent = formatMoney(Number(elements.regular.max));
+      elements.amounts.establishmentMin.textContent = formatMoney(Number(elements.charges.establishment.min));
+      elements.amounts.establishmentMax.textContent = formatMoney(Number(elements.charges.establishment.max));
+      elements.amounts.contributionRateMin.textContent = `${formatRate(Number(elements.charges.contributionRate.min))}`;
+      elements.amounts.contributionRateMax.textContent = `${formatRate(Number(elements.charges.contributionRate.max))}`;
+      elements.amounts.managementMin.textContent = `${formatRate(Number(elements.charges.management.min))}`;
+      elements.amounts.managementMax.textContent = `${formatRate(Number(elements.charges.management.max))}`;
     }
 
     function positionSliderBubble(slider, bubble) {
@@ -1115,13 +1306,16 @@
     }
 
     function renderChargeSummary(settings) {
-      elements.chargeSummaries.contribution.textContent = formatRate(settings.charges.contribution);
+      elements.chargeSummaries.establishment.textContent = formatMoney(settings.charges.establishment);
+      elements.chargeSummaries.contribution.textContent = formatMoney(settings.charges.contribution);
       elements.chargeSummaries.management.textContent = `${formatRate(settings.charges.management)} pa`;
+      elements.chargeSummaries.nominee.textContent = `${currencySymbol(settings.currency)}${settings.charges.nominee} per quarter`;
     }
 
-    function renderMetrics(results, totalInvested) {
+    function renderMetrics(results, totalInvested, settings) {
       Object.entries(results).forEach(([key, points]) => {
         const finalValue = points[points.length - 1].value;
+        elements.metrics[key].label.textContent = `at ${formatRate(settings.rates[key])} growth rate`;
         elements.metrics[key].value.textContent = formatMoney(finalValue);
         elements.metrics[key].growth.textContent = formatGrowthMoney(finalValue - totalInvested);
       });
@@ -1130,7 +1324,7 @@
     function renderTable(results, settings) {
       const rows = [];
 
-      milestoneYears(settings.years).forEach((year) => {
+      displayMilestoneYears(settings.years).forEach((year) => {
         rows.push(`
           <tr>
             <td>Year ${year}</td>
@@ -1153,24 +1347,33 @@
         high: project(settings, settings.rates.high)
       };
       const totalInvested = investedByYear(settings, settings.years);
-      const logo = await loadPdfLogo();
-      const pdfBytes = buildPdfReport(settings, results, totalInvested, logo);
+      const assets = await loadPdfAssets();
+      const pdfBytes = buildPdfReport(settings, results, totalInvested, assets);
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `investment-projection-${new Date().toISOString().slice(0, 10)}.pdf`;
+      link.download = `vfs-regular-savings-plan-illustration-${new Date().toISOString().slice(0, 10)}.pdf`;
       document.body.appendChild(link);
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 0);
     }
 
-    async function loadPdfLogo() {
+    async function loadPdfAssets() {
+      const [logo, anniversary, awards] = await Promise.all([
+        loadPdfImage("vfs-logo.png", 700),
+        loadPdfImage("30yr-logo.svg", 320),
+        loadPdfImage("vfs-awards-logos.png", 900)
+      ]);
+      return { logo, anniversary, awards };
+    }
+
+    async function loadPdfImage(src, targetWidth) {
       try {
-        const image = await loadImage("tam-logo-int.png");
+        const image = await loadImage(src);
         const canvas = document.createElement("canvas");
-        const width = 640;
+        const width = targetWidth;
         const height = Math.round(image.naturalHeight * width / image.naturalWidth);
         canvas.width = width;
         canvas.height = height;
@@ -1197,116 +1400,163 @@
       });
     }
 
-    function buildPdfReport(settings, results, totalInvested, logo) {
+    function buildPdfReport(settings, results, totalInvested, assets = {}) {
       const pdf = createPdf();
+      const colors = {
+        navy: [0.09, 0.11, 0.28],
+        slate: [0.25, 0.31, 0.5],
+        heading: [0.28, 0.31, 0.49],
+        grey: [0.6, 0.6, 0.6],
+        ink: [0.18, 0.2, 0.22],
+        muted: [0.44, 0.45, 0.48],
+        line: [0.88, 0.89, 0.9],
+        soft: [0.97, 0.98, 0.99],
+        panel: [0.98, 0.98, 0.98]
+      };
       const scenarios = [
-        { key: "low", label: "Low Growth", rate: settings.rates.low, color: [0.58, 0.59, 0.6] },
-        { key: "medium", label: "Medium Growth", rate: settings.rates.medium, color: [0.39, 0.39, 0.4] },
-        { key: "high", label: "High Growth", rate: settings.rates.high, color: [0, 0.36, 0.67] }
+        { key: "low", label: `at ${formatRate(settings.rates.low)} growth rate`, chartLabel: `${formatRate(settings.rates.low)} growth`, rate: settings.rates.low, color: colors.grey },
+        { key: "medium", label: `at ${formatRate(settings.rates.medium)} growth rate`, chartLabel: `${formatRate(settings.rates.medium)} growth`, rate: settings.rates.medium, color: colors.navy },
+        { key: "high", label: `at ${formatRate(settings.rates.high)} growth rate`, chartLabel: `${formatRate(settings.rates.high)} growth`, rate: settings.rates.high, color: colors.slate }
       ];
 
-      pdf.rect(0, 0, 595.28, 12, [0, 0.36, 0.67]);
-      pdf.text("Regular Investment Illustration", 42, 54, 22, "F2", [0.18, 0.2, 0.22]);
-      drawTamLogo(pdf, logo, 405, 38);
-      drawPdfInfoBox(pdf, "Client name", settings.clientName || "Not specified", 42, 76, 240);
-      drawPdfInfoBox(pdf, "Prepared by", settings.preparedBy || "Not specified", 300, 76, 240);
-      pdf.line(42, 114, 553, 114, [0.88, 0.89, 0.9], 1);
+      pdf.rect(0, 0, 595.28, 12, colors.navy);
+      pdf.text("VFS Regular Savings Plan Illustration", 42, 44, 18, "F2", colors.ink);
+      pdf.text("FLEXIBILITY / ACCESSIBILITY / GROWTH", 42, 62, 8, "F2", colors.heading);
+      drawVfsLogo(pdf, assets.logo, 398, 34);
+      drawPdfInfoBox(pdf, "Client name", settings.clientName || "Not specified", 42, 78, 240, colors);
+      drawPdfInfoBox(pdf, "VFS Adviser", settings.preparedBy || "Not specified", 300, 78, 240, colors);
 
       const inputRows = [
         ["Initial investment", formatPdfMoney(settings.initial, settings.currency)],
         [`Regular ${frequencyLabel(settings.frequency)} investment`, formatPdfMoney(settings.regular, settings.currency)],
-        ["Projection period", `${settings.years} years`],
-        [`Total invested over ${settings.years} years`, formatPdfMoney(totalInvested, settings.currency)]
-      ];
-      const growthRows = [
-        ["Low", `${formatRate(settings.rates.low)} pa`],
-        ["Medium", `${formatRate(settings.rates.medium)} pa`],
-        ["High", `${formatRate(settings.rates.high)} pa`]
+        ["Frequency", capitalise(frequencyLabel(settings.frequency))],
+        ["Time frame", `${settings.years} years`]
       ];
       const chargeRows = [
-        ["Contribution charge", `${formatRate(settings.charges.contribution)}`],
-        ["Annual management charge", `${formatRate(settings.charges.management)} pa`]
+        ["Establishment charge", formatPdfMoney(settings.charges.establishment, settings.currency)],
+        ["Avg contribution charge", `${formatRate(settings.charges.contributionRate)} (${formatPdfMoney(settings.charges.contribution, settings.currency)})`],
+        ["Annual management charge", `${formatRate(settings.charges.management)} pa`],
+        ["Nominee charge", `${formatPdfMoney(settings.charges.nominee, settings.currency)} per quarter`]
       ];
 
-      pdf.text("Investment profile", 42, 132, 12, "F2", [0.18, 0.2, 0.22]);
-      drawBoxedKeyValueGrid(pdf, inputRows, 42, 148, 500, 4);
-      pdf.text("Growth rates", 42, 206, 12, "F2", [0.18, 0.2, 0.22]);
-      drawBoxedKeyValueGrid(pdf, growthRows, 42, 222, 300, 3);
-      pdf.text("Charges", 370, 206, 12, "F2", [0.18, 0.2, 0.22]);
-      drawBoxedKeyValueGrid(pdf, chargeRows, 370, 222, 172, 2);
+      pdf.text("Investment profile", 42, 128, 8, "F2", colors.ink);
+      drawBoxedKeyValueGrid(pdf, inputRows, 42, 144, 500, 4, colors);
+      pdf.text("Charges", 42, 198, 8, "F2", colors.ink);
+      drawBoxedKeyValueGrid(pdf, chargeRows, 42, 214, 500, 4, colors);
+      drawPdfSurrenderChargeBox(
+        pdf,
+        "Surrender Charges",
+        "For VFS Clients there are no surrender or redemption penalties, so the Plan Value equals the Surrender Value at all times.",
+        42,
+        248,
+        500,
+        colors
+      );
 
-      pdf.text(`${settings.years}-year outcomes`, 42, 276, 12, "F2", [0.18, 0.2, 0.22]);
-      scenarios.forEach((scenario, index) => {
-        const x = 42 + index * 171;
+      pdf.text("Investment Illustration", 42, 302, 8, "F2", colors.ink);
+      drawPdfChart(pdf, settings, results, 30, 318, 342, 210, scenarios, colors);
+
+      pdf.text(`${settings.years}-year outcomes`, 390, 302, 8, "F2", colors.ink);
+      [...scenarios].reverse().forEach((scenario, index) => {
+        const x = 390;
+        const y = 318 + index * 72;
         const finalValue = results[scenario.key][settings.years].value;
-        pdf.rect(x, 294, 154, 70, [0.98, 0.98, 0.98]);
-        pdf.rect(x, 294, 5, 70, scenario.color);
-        pdf.text(scenario.label, x + 16, 314, 9, "F2", [0.44, 0.45, 0.48]);
-        pdf.text(formatPdfMoney(finalValue, settings.currency), x + 16, 338, 16, "F2", [0.18, 0.2, 0.22]);
-        pdf.text(`Growth ${formatPdfGrowthMoney(finalValue - totalInvested, settings.currency)}`, x + 16, 356, 9, "F1", [0.44, 0.45, 0.48]);
+        const isMedium = scenario.key === "medium";
+        pdf.rect(x, y, 154, 66, isMedium ? [0.94, 0.95, 0.98] : colors.panel);
+        pdf.rect(x, y, isMedium ? 8 : 5, 66, scenario.color);
+        pdf.text(scenario.label, x + 16, y + 19, 8.5, "F2", colors.muted);
+        pdf.text(formatPdfMoney(finalValue, settings.currency), x + 16, y + 43, 15, "F2", colors.ink);
+        pdf.text(`Growth ${formatPdfGrowthMoney(finalValue - totalInvested, settings.currency)}`, x + 16, y + 60, 8, "F1", colors.muted);
       });
 
-      pdf.text("Projection graph", 42, 404, 12, "F2", [0.18, 0.2, 0.22]);
-      drawPdfChart(pdf, settings, results, 42, 424, 488, 118, scenarios);
-
-      pdf.text("Milestone values", 42, 582, 12, "F2", [0.18, 0.2, 0.22]);
-      drawMilestoneTable(pdf, settings, results, 42, 602);
-
-      drawPdfImportantInformation(pdf, 12, 730, 571);
+      pdf.text("Plan Value / Surrender Value", 42, 552, 8, "F2", colors.ink);
+      drawMilestoneTable(pdf, settings, results, 42, 568, colors);
+      drawPdfImportantInformation(pdf, 42, 696, 500, colors);
+      drawPdfFooter(pdf, assets, colors);
 
       return pdf.output();
     }
 
-    function drawTamLogo(pdf, logo, x, y) {
+    function drawVfsLogo(pdf, logo, x, y) {
       if (logo) {
-        pdf.image(logo, x, y, 148, 23);
+        pdf.image(logo, x, y, 145, 43);
         return;
       }
 
-      pdf.text("TAM", x, y + 16, 25, "F2", [0, 0.36, 0.67]);
-      pdf.line(x + 66, y - 1, x + 66, y + 23, [0.78, 0.79, 0.8], 1);
-      pdf.text("asset management", x + 76, y + 8, 6.8, "F1", [0.39, 0.39, 0.4]);
-      pdf.text("international", x + 76, y + 18, 6.8, "F1", [0.39, 0.39, 0.4]);
+      pdf.text("VFS", x, y + 18, 22, "F2", [0.09, 0.11, 0.28]);
+      pdf.text("INTERNATIONAL", x, y + 33, 11, "F2", [0.25, 0.31, 0.5]);
     }
 
-    function drawPdfInfoBox(pdf, label, value, x, y, width) {
-      pdf.rect(x, y, width, 30, [0.98, 0.98, 0.98]);
-      pdf.rect(x, y, 4, 30, [0, 0.36, 0.67]);
-      pdf.text(label, x + 14, y + 11, 6.8, "F1", [0.44, 0.45, 0.48]);
-      pdf.text(value, x + 14, y + 24, 9, "F2", [0.18, 0.2, 0.22]);
+    function drawPdfInfoBox(pdf, label, value, x, y, width, colors) {
+      pdf.rect(x, y, width, 30, colors.panel);
+      pdf.rect(x, y, 4, 30, colors.navy);
+      pdf.text(label, x + 14, y + 11, 6.8, "F1", colors.muted);
+      pdf.text(value, x + 14, y + 24, 9, "F2", colors.ink);
     }
 
-    function drawBoxedKeyValueGrid(pdf, rows, x, y, width, columns) {
+    function drawBoxedKeyValueGrid(pdf, rows, x, y, width, columns, colors) {
       const columnWidth = width / columns;
       rows.forEach(([label, value], index) => {
         const col = index % columns;
         const row = Math.floor(index / columns);
         const cellX = x + col * columnWidth + 3;
         const cellY = y + row * 34;
-        pdf.rect(cellX - 3, cellY - 8, columnWidth - 8, 30, [0.98, 0.98, 0.98]);
-        pdf.text(label, cellX + 7, cellY, 6.8, "F1", [0.44, 0.45, 0.48]);
-        pdf.text(value, cellX + 7, cellY + 12, 8.6, "F2", [0.18, 0.2, 0.22]);
+        pdf.rect(cellX - 3, cellY - 8, columnWidth - 8, 30, colors.panel);
+        pdf.text(label, cellX + 7, cellY, 5.8, "F1", colors.muted);
+        pdf.text(value, cellX + 7, cellY + 12, 8, "F2", colors.ink);
       });
     }
 
-    function drawPdfImportantInformation(pdf, x, y, width) {
-      pdf.text("Important Information", x, y, 9, "F2", [0.18, 0.2, 0.22]);
-      const paragraphs = [
-        "This calculator has been produced for illustrative purposes only and is intended to demonstrate the potential value of regular investments over time based on the assumptions selected by the user. It does not constitute financial advice, a recommendation to invest, or a guarantee of future investment performance.",
-        "The assumed rates of return used within this illustration are hypothetical, are net of applicable investment and product charges unless otherwise stated, and may be amended by the user. They are provided solely for illustrative purposes and should not be regarded as forecasts, projections or guarantees of future investment returns.",
-        "The value of investments, and any income derived from them, may rise or fall due to market movements, and investors may receive back less than the amount originally invested. Actual investment performance is unlikely to match the assumed rates used in this illustration and may differ materially.",
-        "Unless otherwise stated, the illustration does not take account of taxation, inflation, changes in exchange rates or adviser remuneration not included within the assumed charges. These factors may have a significant impact on actual investment outcomes.",
-        "The adviser is responsible for ensuring that the assumptions used are appropriate for the client's circumstances and for explaining the purpose and limitations of this illustration. TAM Asset Management International Ltd accepts no liability for any loss or investment outcome arising from reliance on the assumptions used or the illustrative values generated by this calculator."
-      ];
-      let lineY = y + 13;
-      paragraphs.forEach((paragraph) => {
-        wrapPdfText(paragraph, 185).forEach((line) => {
-          pdf.text(line, x, lineY, 5.2, "F1", [0.44, 0.45, 0.48]);
-          lineY += 6.1;
-        });
-        lineY += 2.4;
+    function drawPdfSurrenderChargeBox(pdf, label, value, x, y, width, colors) {
+      pdf.rect(x, y, width, 34, colors.panel);
+      pdf.text(label, x + 12, y + 10, 5.8, "F1", colors.muted);
+      wrapPdfText(value, 150).forEach((line, index) => {
+        pdf.text(line, x + 12, y + 22 + index * 7, 7, "F2", colors.ink);
       });
-      pdf.line(x, 822, x + width, 822, [0.88, 0.89, 0.9], 0.6);
+    }
+
+    function drawPdfImportantInformation(pdf, x, y, width, colors) {
+      pdf.text("Important Information", x, y, 8, "F2", colors.ink);
+      const paragraphs = [
+        {
+          text: "The growth rates used in this illustration are for illustrative purposes only and are not guaranteed. Actual growth will depend on the performance of the underlying funds and may be lower than the contributions paid into the plan. The illustrated values allow for the deduction of the establishment charge, average contribution charge, annual management charge and nominee fees where applicable. The three rates of return do not represent upper or lower limits on investment performance.",
+          font: "F1",
+          size: 6,
+          fill: colors.muted
+        },
+        {
+          text: "This illustration is provided for information purposes only. It does not constitute investment advice, a recommendation, a solicitation to invest, or an offer to buy or sell any security or investment product.",
+          font: "F1",
+          size: 6,
+          fill: colors.muted
+        },
+        {
+          text: "Neither VFS International Ltd nor any of its directors, employees or officers gives any warranty that the products or services illustrated are suitable for a client's needs or available in the client's jurisdiction. No liability is accepted for any loss, damage or investment outcome arising from reliance on this illustration.",
+          font: "F1",
+          size: 6,
+          fill: colors.muted
+        },
+        {
+          text: "Investment values can fall as well as rise, and past performance is not necessarily a guide to future performance. There is no guarantee of capital security, investment growth, income, or the actual or future performance of any underlying investment. Clients may receive back less than they invest.",
+          font: "F1",
+          size: 6,
+          fill: colors.muted
+        },
+        {
+          text: "Although care has been taken in preparing this information, no responsibility can be accepted for errors of fact or opinion. Investments may be exposed to risks including interest rate risk, credit risk, inflation risk, liquidity risk, currency risk, market risk, reinvestment risk and call risk.",
+          font: "F1",
+          size: 6,
+          fill: colors.muted
+        }
+      ];
+      let lineY = y + 10;
+      paragraphs.forEach((paragraph) => {
+        wrapPdfText(paragraph.text, 188).forEach((line) => {
+          pdf.text(line, x, lineY, paragraph.size, paragraph.font, paragraph.fill);
+          lineY += 6.5;
+        });
+        lineY += 1.3;
+      });
     }
 
     function wrapPdfText(text, maxChars) {
@@ -1328,22 +1578,22 @@
       return lines;
     }
 
-    function drawMilestoneTable(pdf, settings, results, x, y) {
+    function drawMilestoneTable(pdf, settings, results, x, y, colors) {
       const widths = [72, 104, 104, 104, 104];
       const headers = ["Year", "Invested", "Low", "Medium", "High"];
-      const rowHeight = 22;
-      const rows = milestoneYears(settings.years);
+      const rowHeight = 14;
+      const rows = displayMilestoneYears(settings.years);
       let colX = x;
 
       pdf.rect(x, y, widths.reduce((sum, width) => sum + width, 0), rowHeight, [0.95, 0.95, 0.96]);
       headers.forEach((header, index) => {
-        pdf.text(header, colX + 8, y + 15, 8, "F2", [0.44, 0.45, 0.48]);
+        pdf.text(header, colX + 8, y + 10, 7.1, "F2", colors.muted);
         colX += widths[index];
       });
 
       rows.forEach((year, rowIndex) => {
         const rowY = y + rowHeight * (rowIndex + 1);
-        const fill = rowIndex % 2 === 0 ? [1, 1, 1] : [0.98, 0.98, 0.98];
+        const fill = rowIndex % 2 === 0 ? [1, 1, 1] : colors.panel;
         const values = [
           `Year ${year}`,
           formatPdfMoney(investedByYear(settings, year), settings.currency),
@@ -1354,18 +1604,22 @@
         pdf.rect(x, rowY, widths.reduce((sum, width) => sum + width, 0), rowHeight, fill);
         colX = x;
         values.forEach((value, index) => {
-          pdf.text(value, colX + 8, rowY + 15, 8, index === 0 ? "F2" : "F1", [0.18, 0.2, 0.22]);
+          const font = rowIndex === rows.length - 1 || index === 0 ? "F2" : "F1";
+          pdf.text(value, colX + 8, rowY + 10, 7.1, font, colors.ink);
           colX += widths[index];
         });
       });
 
       const tableWidth = widths.reduce((sum, width) => sum + width, 0);
-      pdf.line(x, y, x + tableWidth, y, [0.88, 0.89, 0.9], 1);
-      pdf.line(x, y + rowHeight * (rows.length + 1), x + tableWidth, y + rowHeight * (rows.length + 1), [0.88, 0.89, 0.9], 1);
+      pdf.line(x, y, x + tableWidth, y, colors.line, 1);
+      pdf.line(x, y + rowHeight * (rows.length + 1), x + tableWidth, y + rowHeight * (rows.length + 1), colors.line, 1);
+      return y + rowHeight * (rows.length + 1);
     }
 
-    function drawPdfChart(pdf, settings, results, x, y, width, height, scenarios) {
-      const padding = { top: 8, right: 112, bottom: 24, left: 54 };
+    function drawPdfChart(pdf, settings, results, x, y, width, height, scenarios, colors) {
+      const padding = width < 380
+        ? { top: 8, right: 54, bottom: 24, left: 54 }
+        : { top: 8, right: 112, bottom: 24, left: 54 };
       const chartX = x + padding.left;
       const chartY = y + padding.top;
       const chartWidth = width - padding.left - padding.right;
@@ -1381,15 +1635,15 @@
       for (let i = 0; i <= 4; i += 1) {
         const value = maxValue * (i / 4);
         const lineY = chartY + chartHeight - chartHeight * (i / 4);
-        pdf.line(chartX, lineY, chartX + chartWidth, lineY, [0.9, 0.91, 0.92], 0.6);
-        pdf.text(shortPdfMoney(value, settings.currency), x + 4, lineY + 3, 7, "F1", [0.44, 0.45, 0.48]);
+        pdf.line(chartX, lineY, chartX + chartWidth, lineY, colors.line, 0.6);
+        pdf.text(shortPdfMoney(value, settings.currency), x + 4, lineY + 3, 7, "F1", colors.muted);
       }
 
       xAxisYears(settings.years).forEach((year) => {
         const tickX = chartX + chartWidth * (year / settings.years);
-        pdf.text(String(year), tickX - 3, y + height - 4, 7, "F1", [0.44, 0.45, 0.48]);
+        pdf.text(String(year), tickX - 3, y + height - 4, 7, "F1", colors.muted);
       });
-      pdf.text("Years", chartX + chartWidth / 2 - 10, y + height + 8, 7, "F2", [0.44, 0.45, 0.48]);
+      pdf.text("Years", chartX + chartWidth / 2 - 10, y + height + 8, 7, "F2", colors.muted);
 
       pdf.band(
         results.high.map((point) => ({
@@ -1400,7 +1654,7 @@
           x: chartX + chartWidth * (point.year / settings.years),
           y: chartY + chartHeight - chartHeight * (point.value / maxValue)
         })),
-        [0.92, 0.96, 1]
+        [0.93, 0.94, 0.97]
       );
 
       scenarios.forEach((scenario) => {
@@ -1409,10 +1663,22 @@
           y: chartY + chartHeight - chartHeight * (point.value / maxValue)
         }));
         const lineWidth = scenario.key === "medium" ? 2.2 : 1.2;
-        const finalValue = results[scenario.key][settings.years].value;
         pdf.polyline(points, scenario.color, lineWidth);
-        pdf.text(`${scenario.label}: ${shortPdfMoney(finalValue, settings.currency)}`, chartX + chartWidth + 8, points[points.length - 1].y + 2, 7, "F2", scenario.color);
+        pdf.text(`${formatRate(scenario.rate)}`, chartX + chartWidth + 8, points[points.length - 1].y + 2, 7, "F2", scenario.color);
       });
+    }
+
+    function drawPdfFooter(pdf, assets, colors) {
+      pdf.line(42, 800, 553, 800, colors.line, 0.6);
+      pdf.text("VFS International Ltd", 42, 810, 6.4, "F2", colors.ink);
+      pdf.text("10th Floor, Tower 1, NexTeracom Building, Ebene Cybercity, Mauritius", 42, 819, 5.6, "F1", colors.muted);
+      pdf.text("+230 466 3852 | info@vfsint.com | www.vfsint.com", 42, 827, 5.6, "F1", colors.muted);
+      if (assets.anniversary) {
+        pdf.image(assets.anniversary, 292, 805, 31, 24);
+      }
+      if (assets.awards) {
+        pdf.image(assets.awards, 330, 803, 223, 31);
+      }
     }
 
     function createPdf() {
@@ -1539,9 +1805,9 @@
       drawSeries(ctx, results.low, palette.low, padding, chartWidth, chartHeight, maxValue, settings.years, 2);
       drawSeries(ctx, results.high, palette.high, padding, chartWidth, chartHeight, maxValue, settings.years, 2);
       drawSeries(ctx, results.medium, palette.medium, padding, chartWidth, chartHeight, maxValue, settings.years, 4);
-      drawEndLabel(ctx, "Low Growth", results.low, palette.low, padding, chartWidth, chartHeight, maxValue, settings.currency, width);
-      drawEndLabel(ctx, "Medium Growth", results.medium, palette.medium, padding, chartWidth, chartHeight, maxValue, settings.currency, width);
-      drawEndLabel(ctx, "High Growth", results.high, palette.high, padding, chartWidth, chartHeight, maxValue, settings.currency, width);
+      drawEndLabel(ctx, `${formatRate(settings.rates.low)} growth`, results.low, palette.low, padding, chartWidth, chartHeight, maxValue, settings.currency, width);
+      drawEndLabel(ctx, `${formatRate(settings.rates.medium)} growth`, results.medium, palette.medium, padding, chartWidth, chartHeight, maxValue, settings.currency, width);
+      drawEndLabel(ctx, `${formatRate(settings.rates.high)} growth`, results.high, palette.high, padding, chartWidth, chartHeight, maxValue, settings.currency, width);
     }
 
     function drawGrid(ctx, width, height, padding, chartWidth, chartHeight, maxValue, periodYears) {
@@ -1549,7 +1815,7 @@
       ctx.strokeStyle = palette.line;
       ctx.fillStyle = palette.muted;
       ctx.lineWidth = 1;
-      ctx.font = "700 12px Inter, system-ui, sans-serif";
+      ctx.font = "700 12px Mulish, Inter, system-ui, sans-serif";
       ctx.textBaseline = "middle";
 
       for (let i = 0; i <= 4; i += 1) {
@@ -1569,7 +1835,7 @@
         const x = padding.left + chartWidth * (year / periodYears);
         ctx.fillText(year.toString(), x, height - padding.bottom + 20);
       });
-      ctx.font = "800 12px Inter, system-ui, sans-serif";
+      ctx.font = "800 12px Mulish, Inter, system-ui, sans-serif";
       ctx.fillText("Years", padding.left + chartWidth / 2, height - 12);
 
       ctx.restore();
@@ -1577,7 +1843,7 @@
 
     function drawRangeBand(ctx, lowPoints, highPoints, padding, chartWidth, chartHeight, maxValue, periodYears) {
       ctx.save();
-      ctx.fillStyle = "rgba(0, 92, 171, 0.055)";
+      ctx.fillStyle = "rgba(64, 79, 127, 0.07)";
       ctx.beginPath();
       highPoints.forEach((point, index) => {
         const x = padding.left + chartWidth * (point.year / periodYears);
@@ -1643,7 +1909,7 @@
       const labelText = `${label}: ${shortMoneyForCurrency(finalPoint.value, currency)}`;
       ctx.save();
       ctx.fillStyle = color;
-      ctx.font = "800 12px Inter, system-ui, sans-serif";
+      ctx.font = "800 12px Mulish, Inter, system-ui, sans-serif";
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
       const labelWidth = ctx.measureText(labelText).width;
@@ -1675,8 +1941,20 @@
       }[frequency];
     }
 
+    function capitalise(value) {
+      return String(value).charAt(0).toUpperCase() + String(value).slice(1);
+    }
+
     function milestoneYears(periodYears) {
       const milestones = [3, 5, 10, 15, 20].filter((year) => year <= periodYears);
+      if (!milestones.includes(periodYears)) {
+        milestones.push(periodYears);
+      }
+      return milestones;
+    }
+
+    function displayMilestoneYears(periodYears) {
+      const milestones = [3, 5, 7, 10, 15, 20, 25].filter((year) => year <= periodYears);
       if (!milestones.includes(periodYears)) {
         milestones.push(periodYears);
       }
