@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VFS Illustration Reports</title>
+  <style>
+    :root {
+      --navy: #0d2b55;
+      --blue: #1169aa;
+      --slate: #314158;
+      --ink: #182233;
+      --muted: #687386;
+      --line: #d8dee8;
+      --soft: #f4f6f9;
+      --panel: #ffffff;
+      --success: #477a5b;
+      --warning: #9a661f;
+      --shadow: 0 18px 44px rgba(15, 28, 47, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #edf1f5;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    main {
+      width: min(100% - 32px, 1280px);
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    body.locked main {
+      display: none;
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    body:not(.locked) .login-screen {
+      display: none;
+    }
+
+    .login-panel {
+      width: min(100%, 440px);
+      padding: 28px;
+    }
+
+    .login-panel img {
+      display: block;
+      width: min(260px, 80%);
+      height: auto;
+      margin-bottom: 22px;
+    }
+
+    .login-panel h1 {
+      font-size: 1.55rem;
+      margin-bottom: 8px;
+    }
+
+    .login-panel p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .login-panel form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .login-error {
+      min-height: 20px;
+      color: #9a3f1f;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 22px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .brand img {
+      width: min(240px, 42vw);
+      height: auto;
+      display: block;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      color: var(--navy);
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 2.6vw, 2.7rem);
+      line-height: 1.08;
+    }
+
+    h2 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .strapline {
+      margin: 6px 0 0;
+      color: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .status {
+      min-width: 220px;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--blue);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.86rem;
+      box-shadow: var(--shadow);
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .status strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .status button {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy);
+      font-size: 0.82rem;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.4fr) auto repeat(4, minmax(0, 1fr)) auto auto;
+      gap: 12px;
+      align-items: end;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .advanced-filter {
+      display: none;
+    }
+
+    .toolbar.enhanced .advanced-filter {
+      display: grid;
+    }
+
+    .filter-mode {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(96px, 1fr));
+      gap: 6px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #f5f7fa;
+    }
+
+    .filter-mode button {
+      min-height: 34px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--slate);
+      padding: 0 10px;
+      font-size: 0.84rem;
+    }
+
+    .filter-mode button.active {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--navy);
+      box-shadow: 0 4px 12px rgba(15, 28, 47, 0.08);
+    }
+
+    .table-view-mode {
+      width: min(100%, 270px);
+    }
+
+    .management-view-mode {
+      width: min(100%, 470px);
+      grid-template-columns: repeat(4, minmax(86px, 1fr));
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--slate);
+      font-size: 0.76rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    input,
+    select,
+    button {
+      min-height: 42px;
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 9px 11px;
+      font-size: 0.92rem;
+    }
+
+    button {
+      border: 0;
+      background: var(--navy);
+      color: white;
+      padding: 0 16px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy);
+    }
+
+    button:hover {
+      filter: brightness(1.05);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    .card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card strong {
+      display: block;
+      margin-top: 6px;
+      color: var(--navy);
+      font-size: 1.55rem;
+      line-height: 1.1;
+    }
+
+    .table-panel {
+      overflow: hidden;
+    }
+
+    .table-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .table-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 66vh;
+    }
+
+    table {
+      width: max-content;
+      min-width: 960px;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    table.summary-view {
+      min-width: max-content;
+    }
+
+    th,
+    td {
+      padding: 8px 7px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+      font-size: 0.78rem;
+    }
+
+    th:first-child,
+    td:first-child,
+    th:nth-child(2),
+    td:nth-child(2),
+    th:nth-child(3),
+    td:nth-child(3),
+    th:last-child,
+    td:last-child {
+      text-align: left;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f2f4f7;
+      color: var(--slate);
+      font-size: 0.64rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .summary-view .full-column {
+      display: none;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .management-info {
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .breakdown-layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 380px) 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .chart-box {
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    #management-chart {
+      width: min(100%, 260px);
+      max-width: 260px;
+      aspect-ratio: 1;
+    }
+
+    .breakdown-table {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .breakdown-table th,
+    .breakdown-table td {
+      padding: 10px 12px;
+      font-size: 0.84rem;
+    }
+
+    .management-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 8px;
+      border-radius: 50%;
+      vertical-align: -1px;
+    }
+
+    .empty {
+      padding: 34px 18px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .error {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border: 1px solid #dfc084;
+      border-left: 5px solid var(--warning);
+      border-radius: 6px;
+      background: #fff7e7;
+      color: #6b4b1c;
+      font-size: 0.9rem;
+    }
+
+    .footer-logos {
+      display: grid;
+      grid-template-columns: minmax(90px, 130px) 1fr;
+      gap: 22px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 18px;
+    }
+
+    .footer-logos img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 980px) {
+      .topbar,
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .brand {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 620px) {
+      main {
+        width: min(100% - 18px, 520px);
+        padding-top: 18px;
+      }
+
+      .toolbar,
+      .table-head {
+        padding: 14px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .breakdown-layout {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+
+      .footer-logos {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="locked">
+  <section class="login-screen" aria-label="Report access">
+    <div class="panel login-panel">
+      <img src="vfs-logo.png" alt="VFS International">
+      <h1>Illustration Reports</h1>
+      <p>Enter the reporting password to view management information.</p>
+      <form id="login-form">
+        <label>
+          Password
+          <input id="report-password" type="password" autocomplete="current-password" autofocus>
+        </label>
+        <button type="submit">Open Reports</button>
+        <div class="login-error" id="login-error" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+
+  <main>
+    <section class="topbar">
+      <div class="brand">
+        <img src="vfs-logo.png" alt="VFS International">
+        <div>
+          <h1>Illustration Reports</h1>
+          <p class="strapline">FLEXIBILITY / ACCESSIBILITY / GROWTH</p>
+        </div>
+      </div>
+      <div class="status" id="status">
+        <div class="status-row">
+          <div>
+            <strong>Ready</strong>
+            <span>Use refresh to load Supabase records.</span>
+          </div>
+          <button id="status-refresh" type="button">Refresh</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="cards" aria-label="Report summary">
+      <div class="panel card">
+        <span>Total Requests</span>
+        <strong id="total-requests">0</strong>
+      </div>
+      <div class="panel card">
+        <span>Last 30 Days</span>
+        <strong id="requests-30-days">0</strong>
+      </div>
+      <div class="panel card">
+        <span>Latest Request</span>
+        <strong id="latest-request">-</strong>
+      </div>
+    </section>
+
+    <section class="panel toolbar" id="filter-toolbar" aria-label="Report filters">
+      <label>
+        Search
+        <input id="search" type="search" placeholder="Client, adviser or PDF filename">
+      </label>
+      <div class="filter-mode" aria-label="Filter mode">
+        <button class="active" id="standard-filters" type="button">Standard</button>
+        <button id="enhanced-filters" type="button">Enhanced</button>
+      </div>
+      <label class="advanced-filter">
+        Adviser
+        <select id="adviser-filter">
+          <option value="">All advisers</option>
+        </select>
+      </label>
+      <label class="advanced-filter">
+        Currency
+        <select id="currency-filter">
+          <option value="">All currencies</option>
+          <option value="GBP">GBP</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+        </select>
+      </label>
+      <label class="advanced-filter">
+        From
+        <input id="from-date" type="date">
+      </label>
+      <label class="advanced-filter">
+        To
+        <input id="to-date" type="date">
+      </label>
+      <button id="refresh" type="button">Refresh</button>
+      <button class="secondary" id="export" type="button">Export CSV</button>
+    </section>
+
+    <div id="message"></div>
+
+    <section class="panel table-panel">
+      <div class="table-head">
+        <div>
+          <h2>Request Log</h2>
+          <p id="record-count">No records loaded yet.</p>
+        </div>
+        <div class="filter-mode table-view-mode" aria-label="Request log view">
+          <button class="active" id="summary-view" type="button">Summary</button>
+          <button id="full-view" type="button">Full</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="summary-view" id="request-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Adviser</th>
+              <th>Currency</th>
+              <th>Initial</th>
+              <th>Regular</th>
+              <th>Frequency</th>
+              <th>Term</th>
+              <th class="full-column">Rates</th>
+              <th class="full-column">Charges</th>
+              <th class="full-column">Total Invested</th>
+              <th class="full-column">Low Value</th>
+              <th class="full-column">Medium Value</th>
+              <th class="full-column">High Value</th>
+              <th class="full-column">PDF File</th>
+            </tr>
+          </thead>
+          <tbody id="records">
+            <tr>
+              <td class="empty" colspan="15">No records loaded yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel management-info">
+      <div class="table-head">
+        <div>
+          <h2>Management Info</h2>
+          <p id="management-breakdown-count">No records loaded yet.</p>
+        </div>
+        <div class="filter-mode management-view-mode" aria-label="Management information view">
+          <button class="active" data-management-view="adviser" type="button">Adviser</button>
+          <button data-management-view="currency" type="button">Currency</button>
+          <button data-management-view="frequency" type="button">Frequency</button>
+          <button data-management-view="term" type="button">Term</button>
+        </div>
+      </div>
+      <div class="breakdown-layout">
+        <div class="chart-box">
+          <canvas id="management-chart" width="520" height="520" aria-label="Management information pie chart"></canvas>
+        </div>
+        <div class="table-wrap">
+          <table class="breakdown-table">
+            <thead>
+              <tr>
+                <th id="management-label">Adviser</th>
+                <th>Requests</th>
+                <th>Share</th>
+              </tr>
+            </thead>
+            <tbody id="management-breakdown">
+              <tr>
+                <td class="empty" colspan="3">No records loaded yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel footer-logos">
+      <img src="30yr-logo.svg" alt="30 years">
+      <img src="vfs-awards-logos.png" alt="VFS awards">
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://pophyntlggibkmqdmqzv.supabase.co";
+    const SUPABASE_PUBLIC_KEY = "sb_publishable_cFBboFqmKXH37oOgmNdIjA_nLDi-TER";
+    const SUPABASE_TABLE = "VFS Illustration Requests";
+    const REPORT_PASSWORD = "vfsmauritius";
+    const REPORT_SESSION_KEY = "vfsReportsUnlocked";
+
+    const elements = {
+      loginForm: document.querySelector("#login-form"),
+      reportPassword: document.querySelector("#report-password"),
+      loginError: document.querySelector("#login-error"),
+      status: document.querySelector("#status"),
+      toolbar: document.querySelector("#filter-toolbar"),
+      message: document.querySelector("#message"),
+      search: document.querySelector("#search"),
+      standardFilters: document.querySelector("#standard-filters"),
+      enhancedFilters: document.querySelector("#enhanced-filters"),
+      requestTable: document.querySelector("#request-table"),
+      summaryView: document.querySelector("#summary-view"),
+      fullView: document.querySelector("#full-view"),
+      adviserFilter: document.querySelector("#adviser-filter"),
+      currencyFilter: document.querySelector("#currency-filter"),
+      fromDate: document.querySelector("#from-date"),
+      toDate: document.querySelector("#to-date"),
+      refresh: document.querySelector("#refresh"),
+      statusRefresh: document.querySelector("#status-refresh"),
+      export: document.querySelector("#export"),
+      records: document.querySelector("#records"),
+      recordCount: document.querySelector("#record-count"),
+      totalRequests: document.querySelector("#total-requests"),
+      requests30Days: document.querySelector("#requests-30-days"),
+      latestRequest: document.querySelector("#latest-request"),
+      managementChart: document.querySelector("#management-chart"),
+      managementBreakdown: document.querySelector("#management-breakdown"),
+      managementBreakdownCount: document.querySelector("#management-breakdown-count"),
+      managementLabel: document.querySelector("#management-label"),
+      managementViewButtons: document.querySelectorAll("[data-management-view]")
+    };
+
+    let allRecords = [];
+    let visibleRecords = [];
+    let managementView = "adviser";
+
+    elements.loginForm.addEventListener("submit", unlockReports);
+    elements.refresh.addEventListener("click", loadRecords);
+    elements.statusRefresh.addEventListener("click", loadRecords);
+    elements.export.addEventListener("click", exportVisibleRecords);
+    elements.standardFilters.addEventListener("click", () => setFilterMode("standard"));
+    elements.enhancedFilters.addEventListener("click", () => setFilterMode("enhanced"));
+    elements.summaryView.addEventListener("click", () => setTableView("summary"));
+    elements.fullView.addEventListener("click", () => setTableView("full"));
+    elements.managementViewButtons.forEach((button) => {
+      button.addEventListener("click", () => setManagementView(button.dataset.managementView));
+    });
+    [elements.search, elements.adviserFilter, elements.currencyFilter, elements.fromDate, elements.toDate]
+      .forEach((input) => input.addEventListener("input", applyFilters));
+
+    if (sessionStorage.getItem(REPORT_SESSION_KEY) === "true") {
+      showReports();
+    }
+
+    function unlockReports(event) {
+      event.preventDefault();
+
+      if (elements.reportPassword.value === REPORT_PASSWORD) {
+        sessionStorage.setItem(REPORT_SESSION_KEY, "true");
+        showReports();
+        return;
+      }
+
+      elements.loginError.textContent = "The password entered is incorrect.";
+      elements.reportPassword.select();
+    }
+
+    function showReports() {
+      document.body.classList.remove("locked");
+      elements.loginError.textContent = "";
+      elements.reportPassword.value = "";
+      loadRecords();
+    }
+
+    async function loadRecords() {
+      setStatus("Loading", "Fetching illustration requests from Supabase.");
+      showMessage("");
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(SUPABASE_TABLE)}?select=*&order=created_at.desc&limit=1000`, {
+          headers: {
+            "apikey": SUPABASE_PUBLIC_KEY,
+            "Authorization": `Bearer ${SUPABASE_PUBLIC_KEY}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Supabase returned ${response.status}`);
+        }
+
+        allRecords = await response.json();
+        populateAdviserFilter(allRecords);
+        applyFilters();
+        setStatus("Connected", `Loaded ${allRecords.length} records.`);
+      } catch (error) {
+        allRecords = [];
+        visibleRecords = [];
+        renderTable([]);
+        renderSummary([]);
+        setStatus("Not connected", "The report could not read from Supabase.");
+        showMessage("The reporting page could not read the Supabase table. Check that the table allows read access for this reporting view, or use a secure API endpoint for live use.");
+        console.warn(error);
+      }
+    }
+
+    function setFilterMode(mode) {
+      const isEnhanced = mode === "enhanced";
+      elements.toolbar.classList.toggle("enhanced", isEnhanced);
+      elements.standardFilters.classList.toggle("active", !isEnhanced);
+      elements.enhancedFilters.classList.toggle("active", isEnhanced);
+
+      if (!isEnhanced) {
+        elements.adviserFilter.value = "";
+        elements.currencyFilter.value = "";
+        elements.fromDate.value = "";
+        elements.toDate.value = "";
+        applyFilters();
+      }
+    }
+
+    function setTableView(mode) {
+      const isFull = mode === "full";
+      elements.requestTable.classList.toggle("summary-view", !isFull);
+      elements.summaryView.classList.toggle("active", !isFull);
+      elements.fullView.classList.toggle("active", isFull);
+    }
+
+    function populateAdviserFilter(records) {
+      const selected = elements.adviserFilter.value;
+      const advisers = [...new Set(records.map((record) => record.adviser_name).filter(Boolean))].sort();
+      elements.adviserFilter.innerHTML = `<option value="">All advisers</option>${advisers.map((name) => `<option value="${escapeAttribute(name)}">${escapeHtml(name)}</option>`).join("")}`;
+      elements.adviserFilter.value = advisers.includes(selected) ? selected : "";
+    }
+
+    function applyFilters() {
+      const search = elements.search.value.trim().toLowerCase();
+      const adviser = elements.adviserFilter.value;
+      const currency = elements.currencyFilter.value;
+      const from = elements.fromDate.value ? new Date(`${elements.fromDate.value}T00:00:00`) : null;
+      const to = elements.toDate.value ? new Date(`${elements.toDate.value}T23:59:59`) : null;
+
+      visibleRecords = allRecords.filter((record) => {
+        const createdAt = record.created_at ? new Date(record.created_at) : null;
+        const text = [record.client_name, record.adviser_name, record.pdf_filename].filter(Boolean).join(" ").toLowerCase();
+
+        if (search && !text.includes(search)) return false;
+        if (adviser && record.adviser_name !== adviser) return false;
+        if (currency && record.currency !== currency) return false;
+        if (from && createdAt && createdAt < from) return false;
+        if (to && createdAt && createdAt > to) return false;
+        return true;
+      });
+
+      renderTable(visibleRecords);
+      renderSummary(visibleRecords);
+      renderManagementInfo(visibleRecords);
+    }
+
+    function renderTable(records) {
+      elements.recordCount.textContent = `${records.length} ${records.length === 1 ? "record" : "records"} shown.`;
+
+      if (!records.length) {
+        elements.records.innerHTML = `<tr><td class="empty" colspan="15">No matching records.</td></tr>`;
+        return;
+      }
+
+      elements.records.innerHTML = records.map((record) => `
+        <tr>
+          <td>${formatDate(record.created_at)}</td>
+          <td>${escapeHtml(record.client_name || "-")}</td>
+          <td>${escapeHtml(record.adviser_name || "-")}</td>
+          <td>${escapeHtml(record.currency || "-")}</td>
+          <td>${formatMoney(record.initial_investment, record.currency)}</td>
+          <td>${formatMoney(record.regular_investment, record.currency)}</td>
+          <td>${escapeHtml(titleCase(record.investment_frequency || "-"))}</td>
+          <td>${formatNumber(record.term_years)} yrs</td>
+          <td class="full-column">${formatRateSet(record)}</td>
+          <td class="full-column">${formatChargeSet(record)}</td>
+          <td class="full-column">${formatMoney(record.total_invested, record.currency)}</td>
+          <td class="full-column">${formatMoney(record.low_final_value, record.currency)}</td>
+          <td class="full-column">${formatMoney(record.medium_final_value, record.currency)}</td>
+          <td class="full-column">${formatMoney(record.high_final_value, record.currency)}</td>
+          <td class="full-column">${escapeHtml(record.pdf_filename || "-")}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSummary(records) {
+      elements.totalRequests.textContent = records.length;
+      elements.requests30Days.textContent = requestsInLast30Days(records);
+      elements.latestRequest.textContent = records[0] ? formatDate(records[0].created_at) : "-";
+    }
+
+    function requestsInLast30Days(records) {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      return records.filter((record) => record.created_at && new Date(record.created_at) >= thirtyDaysAgo).length;
+    }
+
+    function setManagementView(view) {
+      managementView = view;
+      elements.managementViewButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.managementView === view);
+      });
+      renderManagementInfo(visibleRecords);
+    }
+
+    function renderManagementInfo(records) {
+      const config = managementConfigs[managementView];
+      const breakdown = groupedBreakdown(records, config);
+      elements.managementLabel.textContent = config.label;
+      elements.managementBreakdownCount.textContent = `${breakdown.length} ${breakdown.length === 1 ? config.singular : config.plural} shown.`;
+      drawManagementChart(breakdown, records.length);
+
+      if (!breakdown.length) {
+        elements.managementBreakdown.innerHTML = `<tr><td class="empty" colspan="3">No matching records.</td></tr>`;
+        return;
+      }
+
+      elements.managementBreakdown.innerHTML = breakdown.map((item, index) => `
+        <tr>
+          <td><span class="management-dot" style="background:${chartColours[index % chartColours.length]}"></span>${escapeHtml(item.name)}</td>
+          <td>${formatNumber(item.count)}</td>
+          <td>${formatPercentage(item.count, records.length)}</td>
+        </tr>
+      `).join("");
+    }
+
+    const managementConfigs = {
+      adviser: {
+        label: "Adviser",
+        singular: "adviser",
+        plural: "advisers",
+        value: (record) => record.adviser_name || "Not recorded"
+      },
+      currency: {
+        label: "Currency",
+        singular: "currency",
+        plural: "currencies",
+        value: (record) => record.currency || "Not recorded"
+      },
+      frequency: {
+        label: "Frequency",
+        singular: "frequency",
+        plural: "frequencies",
+        value: (record) => titleCase(record.investment_frequency || "Not recorded")
+      },
+      term: {
+        label: "Term",
+        singular: "term",
+        plural: "terms",
+        value: (record) => record.term_years ? `${formatNumber(record.term_years)} years` : "Not recorded"
+      }
+    };
+
+    function groupedBreakdown(records, config) {
+      const counts = records.reduce((memo, record) => {
+        const name = config.value(record);
+        memo[name] = (memo[name] || 0) + 1;
+        return memo;
+      }, {});
+
+      return Object.entries(counts)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+    }
+
+    const chartColours = ["#0d2b55", "#1169aa", "#477a5b", "#9a661f", "#687386", "#8c4f76", "#314158", "#6b8fb8"];
+
+    function drawManagementChart(breakdown, total) {
+      const canvas = elements.managementChart;
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      const center = width / 2;
+      const radius = Math.min(width, height) * 0.36;
+      ctx.clearRect(0, 0, width, height);
+
+      if (!breakdown.length || !total) {
+        ctx.fillStyle = "#687386";
+        ctx.font = "700 28px Arial, Helvetica, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("No data", center, center);
+        return;
+      }
+
+      let start = -Math.PI / 2;
+      breakdown.forEach((item, index) => {
+        const angle = (item.count / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, start, start + angle);
+        ctx.closePath();
+        ctx.fillStyle = chartColours[index % chartColours.length];
+        ctx.fill();
+        start += angle;
+      });
+
+      ctx.beginPath();
+      ctx.arc(center, center, radius * 0.58, 0, Math.PI * 2);
+      ctx.fillStyle = "#f8fafc";
+      ctx.fill();
+
+      ctx.fillStyle = "#0d2b55";
+      ctx.font = "800 46px Arial, Helvetica, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(formatNumber(total), center, center - 10);
+      ctx.fillStyle = "#687386";
+      ctx.font = "700 20px Arial, Helvetica, sans-serif";
+      ctx.fillText("requests", center, center + 30);
+    }
+
+    function exportVisibleRecords() {
+      if (!visibleRecords.length) return;
+
+      const headers = [
+        "created_at",
+        "client_name",
+        "adviser_name",
+        "currency",
+        "initial_investment",
+        "regular_investment",
+        "investment_frequency",
+        "term_years",
+        "low_growth_rate",
+        "medium_growth_rate",
+        "high_growth_rate",
+        "establishment_charge",
+        "average_contribution_charge_rate",
+        "average_contribution_charge_amount",
+        "annual_management_charge",
+        "nominee_charge_per_quarter",
+        "total_invested",
+        "low_final_value",
+        "medium_final_value",
+        "high_final_value",
+        "low_growth_amount",
+        "medium_growth_amount",
+        "high_growth_amount",
+        "pdf_filename"
+      ];
+
+      const rows = [headers, ...visibleRecords.map((record) => headers.map((header) => record[header] ?? ""))];
+      const csv = rows.map((row) => row.map(csvCell).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `vfs-illustration-requests-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+
+    function setStatus(title, detail) {
+      elements.status.querySelector(".status-row > div").innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span>`;
+    }
+
+    function showMessage(message) {
+      elements.message.innerHTML = message ? `<div class="error">${escapeHtml(message)}</div>` : "";
+    }
+
+    function formatRateSet(record) {
+      return `${formatRate(record.low_growth_rate)} / ${formatRate(record.medium_growth_rate)} / ${formatRate(record.high_growth_rate)}`;
+    }
+
+    function formatChargeSet(record) {
+      return [
+        formatMoney(record.establishment_charge, record.currency),
+        formatRate(record.average_contribution_charge_rate),
+        formatRate(record.annual_management_charge),
+        `${formatMoney(record.nominee_charge_per_quarter, record.currency)} qtr`
+      ].join(" / ");
+    }
+
+    function dominantCurrency(records) {
+      const counts = records.reduce((memo, record) => {
+        memo[record.currency] = (memo[record.currency] || 0) + 1;
+        return memo;
+      }, {});
+      return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "GBP";
+    }
+
+    function sum(records, key) {
+      return records.reduce((total, record) => total + numberOrZero(record[key]), 0);
+    }
+
+    function formatSummaryMoney(value, currency) {
+      return formatMoney(value, currency);
+    }
+
+    function formatMoney(value, currency) {
+      return `${currencySymbol(currency)}${new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.round(numberOrZero(value)))}`;
+    }
+
+    function currencySymbol(currency) {
+      return {
+        GBP: "£",
+        USD: "$",
+        EUR: "€"
+      }[currency] || "";
+    }
+
+    function formatRate(value) {
+      return `${Number(numberOrZero(value)).toFixed(1)}%`;
+    }
+
+    function formatPercentage(value, total) {
+      if (!total) return "0.0%";
+      return `${((value / total) * 100).toFixed(1)}%`;
+    }
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(numberOrZero(value));
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      return new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).format(new Date(value));
+    }
+
+    function numberOrZero(value) {
+      const number = Number(value);
+      return Number.isFinite(number) ? number : 0;
+    }
+
+    function titleCase(value) {
+      return String(value)
+        .toLowerCase()
+        .replace(/\b([a-z])/g, (match) => match.toUpperCase());
+    }
+
+    function csvCell(value) {
+      const text = String(value ?? "");
+      return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value);
+    }
+  </script>
+</body>
+</html>
